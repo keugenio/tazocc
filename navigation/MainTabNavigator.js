@@ -1,11 +1,11 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-
+import Colors from '../constants/Colors';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import EmailScreen from '../screens/EmailScreen';
+import Login from '../screens/LoginScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -18,43 +18,44 @@ HomeStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-home`
+          : 'md-home'
       }
     />
   ),
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
+const EmailStack = createStackNavigator({
+  Links: EmailScreen,
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+EmailStack.navigationOptions = {
+  tabBarLabel: 'Email TAZ',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={Platform.OS === 'ios' ? 'ios-mail' : 'md-mail'}
     />
   ),
 };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
+
+const AuthStack = createStackNavigator({
+  Settings: Login,
 });
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
+AuthStack.navigationOptions = {
+  tabBarLabel: 'Login',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios' ? 'ios-log-in' : 'md-log-in'}
     />
   ),
 };
 
 export default createBottomTabNavigator({
   HomeStack,
-  LinksStack,
-  SettingsStack,
+  EmailStack,
+  AuthStack
 });
