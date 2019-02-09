@@ -6,10 +6,13 @@ import Colors from '../../constants/Colors';
 getImage= function(image) {
   switch (image) {
     case 'paddling101':
-      return require('../images/paddling101.jpg')
+        return require('../images/paddling101.png')
       case 'history':
-      return require('../images/history.jpg')
-  
+        return require('../images/history.jpg')
+      case 'oc1':
+        return require('../images/oc1.jpg')
+      case 'aboutus':
+        return require('../images/aboutus.jpg')                 
     default:
       break;
   }
@@ -32,13 +35,17 @@ export default BackgroundImage
 const styles = StyleSheet.create({
   containerStyle:{
     flex:1,
-    backgroundColor:Colors.mainBg
+    backgroundColor:Colors.mainBg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,    
   },
   imageStyle:{ 
     position:'absolute', 
     top:0, 
     opacity:.5, 
-    borderColor:Colors.primaryBorder,
+    borderColor:'#0d91a1',
     borderWidth:2
   },
   textStyle:{
@@ -48,7 +55,8 @@ const styles = StyleSheet.create({
     textAlign:'center',
     textShadowColor: '#000000',
     textShadowOffset:{width:5, height:5},
-    textShadowRadius:5
+    textShadowRadius:5,
+    fontFamily:'Quicksand-Medium'
   }
 
 })
