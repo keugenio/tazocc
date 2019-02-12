@@ -24,7 +24,7 @@ getImage= function(image) {
       case 'shopping cart':
         return require('../images/shopping-cart.png')  
       case 'sponsors':
-        return require('../images/aunty-aloha.jpg')                    
+        return require('../images/sponsors.png')                    
     default:
       break;
   }

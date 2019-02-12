@@ -41,7 +41,8 @@ export default class App extends React.Component {
         'space-mono': require('./assets/fonts/SpaceMono.ttf'),
         'Raleway': require('./assets/fonts/Raleway.ttf'),
         'Quicksand': require('./assets/fonts/Quicksand.ttf'),
-        'Quicksand-Medium': require('./assets/fonts/Quicksand-Medium.ttf'),        
+        'Quicksand-Medium': require('./assets/fonts/Quicksand-Medium.ttf'), 
+        'Broda':require('./assets/fonts/Broda.ttf')       
       }),
     ]);
   };

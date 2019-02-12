@@ -6,6 +6,7 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import EmailScreen from '../screens/EmailScreen';
 import Login from '../screens/LoginScreen';
+import News from '../screens/News';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -39,6 +40,19 @@ EmailStack.navigationOptions = {
   ),
 };
 
+const NewsStack = createStackNavigator({
+  Settings: Login,
+});
+
+NewsStack.navigationOptions = {
+  tabBarLabel: 'News',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'news' : 'news'}
+    />
+  ),
+};
 
 const AuthStack = createStackNavigator({
   Settings: Login,
@@ -57,5 +71,6 @@ AuthStack.navigationOptions = {
 export default createBottomTabNavigator({
   HomeStack,
   EmailStack,
-  AuthStack
+  NewsStack,
+  AuthStack,
 });

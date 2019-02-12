@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "/Users/kui/Desktop/testReact/NASH-App/NASH-App"
+		}
+	],
+	"settings": {
+		"editor.tabSize": 2,
+		"editor.snippetSuggestions": "top"
+	}
+}
