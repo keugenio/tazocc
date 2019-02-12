@@ -1,12 +1,13 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import Colors from '../constants/Colors';
+import { createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import EmailScreen from '../screens/EmailScreen';
 import Login from '../screens/LoginScreen';
 import News from '../screens/News';
+import Colors from '../constants/Colors';
+import {AddButton} from '../src/components/AddButton';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -41,7 +42,7 @@ EmailStack.navigationOptions = {
 };
 
 const NewsStack = createStackNavigator({
-  Settings: Login,
+  Settings: News,
 });
 
 NewsStack.navigationOptions = {
@@ -49,8 +50,8 @@ NewsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'news' : 'news'}
-    />
+      name={Platform.OS === 'ios' ? 'ios-notifications' : 'md-notifications'}
+    />  
   ),
 };
 
@@ -68,9 +69,28 @@ AuthStack.navigationOptions = {
   ),
 };
 
-export default createBottomTabNavigator({
-  HomeStack,
-  EmailStack,
-  NewsStack,
-  AuthStack,
-});
+export default createBottomTabNavigator(
+
+  {
+    HomeStack,
+    EmailStack,
+    More: {
+        screen: () => null, // Empty screen
+        navigationOptions: () => ({
+            tabBarIcon: <AddButton />, // Plus button component
+            tabBarLabel:' '
+        })
+    },
+    NewsStack,
+    AuthStack,
+    },
+
+  {tabBarOptions: {
+    labelStyle: {
+      color:'#FFFFFF'
+    },
+    style: {
+      backgroundColor: Colors.mainBg,
+    },
+  }}
+);

@@ -40,7 +40,6 @@ export default class HomeScreen extends React.Component {
             this.state.dataSource.forEach(element => {
               if (localStorage.includes(element)==false){
                 this.setState({newPosts:[...this.state.newPosts, element.id]})
-                
               }
 
             });
@@ -87,30 +86,7 @@ export default class HomeScreen extends React.Component {
         alert('storage empty');
     })
   }
-  _getItem = function({item}){
-    clean = function (text) {
-      var mapObj = {
-          '&#8211;':"",
-          '&amp;':"&",
-          'Fw: ':"",
-          'Fwd: ':""
-      }
 
-      cleanedText = text.replace(/&#8211|&amp|Fw: |Fwd: /g, function(matched){
-        return mapObj[matched];
-      });
-
-      cleanedText=cleanedText.replace('undefined; ', "");
-      cleanedText=cleanedText.replace('undefined; ', "");
-
-      return cleanedText
-    }
-    let cleanedText = clean(item.title.rendered);
-
-    return(
-      <Text>{cleanedText}</Text>      
-    )
-  }
 
   render() {
     console.log("new posts: " + this.state.newPosts);
@@ -131,62 +107,23 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <View style={styles.mainBodyContainer}>
-          <View style={{flex: 1, paddingTop:20}}>
-          <FlatList
-            data={this.state.dataSource}
-            renderItem={this._getItem}
-            keyExtractor={(item, index) => index.toString()} 
-          />
-          <View style={[styles.buttonContainer, {width:width*.25}]}>
-            <TouchableOpacity onPress={this._showNewPosts} style={styles.buttonPadding}>
-              <Text style={styles.buttonText}>Show newPosts</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={[styles.buttonContainer, {width:width*.25}]}>
-            <TouchableOpacity onPress={this._showStorage} style={styles.buttonPadding}>
-              <Text style={styles.buttonText}>Show storage</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.buttonContainer, {width:width*.25}]}>
-            <TouchableOpacity onPress={this._clearNews} style={styles.buttonPadding}>
-              <Text style={styles.buttonText}>Clear Storage</Text>
-            </TouchableOpacity>
-          </View> 
           
-          </View>          
-            <BackgroundImage height={height*.25} width={width} text="News" source={'oc1'} />
+
             <Image source={require('../src/images/adr2018.jpg')} style={styles.imageStyle}/>             
             
-            <MultipleImage height={height*.25} width={width*.5} 
-              text={["Events", "Practices"]} 
-              source={['shopping cart', 'paddling101']} />
-            <Image source={require('../src/images/adr2.jpg')} style={styles.imageStyle}/> 
             <View style={{marginVertical:FontSize.FONTSIZE*2}}>
-              <Text style={[{color:'#FFFF00', fontSize:FontSize.FONTSIZE*2, fontFamily:'Broda', textAlign:'center'}]}>our Mission</Text>
+              <Text style={[{color:'#FFFF00', fontSize:FontSize.FONTSIZE*3, fontFamily:'Broda', textAlign:'center'}]}>our Mission</Text>
               <Text style={styles.mainBodyText}>to promote the Hawaiian culture through competitive and recreational outrigger canoe paddling for youth (keikis), family (ohana), and the community.</Text>            
             </View>
-            <MultipleImage height={height*.25} width={width*.5} 
-              text={[ "My SCORA info","Smart Waiver"]} 
-              source={['hibiscus','smart waiver']} />  
+
             <Image source={require('../src/images/trailing.jpg')} style={styles.imageStyle}/>  
              
             <Philosophies />  
            
-            <MultipleImage height={height*.25} width={width*.5} 
-              text={["Shop TAZ", "Sponsors"]} 
-              source={['shopping cart', 'sponsors']} />  
-                      
-            <BackgroundImage height={height*.25} width={width} text="About TAZ" source={'aboutus'} />
             <Image source={require('../src/images/auntyaloha.jpg')} style={[styles.imageStyle,{opacity:.75}]}/>             
           </View>
 
-         
-        </ScrollView>
-
-        <View style={styles.messagesContainer}>
-          <Text style={styles.tabBarInfoText}> {this.state.newPosts.length} new posts</Text>
-        </View>
+        </ScrollView>  
       </View>
     );
   }
@@ -206,7 +143,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.mainBg,
-    paddingBottom:50
   },
   developmentModeText: {
     marginBottom: 20,

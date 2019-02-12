@@ -60,7 +60,7 @@ class Philosophies extends Component{
     
     return (
       <View style={{flex:1}}>
-        <Text style={[p, pHighlight, {fontSize:FontSize.FONTSIZE*2, textAlign:'center'}]}>Our Philosophies</Text>
+        <Text style={[p, pHighlight, {fontSize:FontSize.FONTSIZE*3, textAlign:'center'}]}>Our Philosophies</Text>
         <Carousel
         ref={(c) => { this._carousel = c; }}
         data={this.state.data}
