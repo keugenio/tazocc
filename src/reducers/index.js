@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
-import NewPostCountReucer from './NewPostCountReducer';
-import LocalDataSource from './LocalDataSourceReducer';
-import NewPostsIDs from './NewPostIDsReducer';
+import NewPostCountReducer from './NewPostCountReducer';
+import LocalDataSourceReducer from './LocalDataSourceReducer';
+import NewPostsIDsReducer from './NewPostIDsReducer';
+import SelectPostIDReducer from './SelectPostReducer';
 
 export default combineReducers({
-  newPostCount: NewPostCountReucer,
-  localDataSource: LocalDataSource,
-  newPostsIDs: NewPostsIDs
+  newPostCount: NewPostCountReducer,
+  localDataSource: LocalDataSourceReducer,
+  newPostsIDs: NewPostsIDsReducer,
+  selectedPostID: SelectPostIDReducer,
 })

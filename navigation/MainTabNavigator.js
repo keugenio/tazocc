@@ -98,7 +98,6 @@ AuthStack.navigationOptions = {
 export default createBottomTabNavigator(
 
   {
-    TestStack,
     HomeStack,
     EmailStack,
     More: {
