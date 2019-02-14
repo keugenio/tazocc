@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
-import { View, TouchableWithoutFeedback, StyleSheet, LayoutAnimation} from 'react-native';
-import { Card, Text } from 'react-native-elements';
+import { ScrollView, View, TouchableWithoutFeedback, TouchableHighlight, StyleSheet, LayoutAnimation, Dimensions, Modal, WebView} from 'react-native';
+import { Button, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 import HtmlText from 'react-native-html-to-text';
 import { CardSection } from '../components/common/CardSection';
 import * as actions from '../actions';
 import FontSize from '../../constants/FontSize';
 import Colors from '../../constants/Colors';
+import Icon from '@expo/vector-icons/FontAwesome';
+
+const {height, width} = Dimensions.get('window');
 
 class SinglePost extends Component {
+  state = {
+    modalVisible: false,
+  };
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
   componentWillUpdate(){
     LayoutAnimation.spring();
   }
@@ -33,14 +43,25 @@ class SinglePost extends Component {
 
   _removeHTMLLink = function (text){
     cleanedText = text.replace(/<a href.*a>/, "");
+    
     return cleanedText;
   }
+
   _renderExcerpt(){
     const {post, expanded} = this.props;
     if (expanded){
       return (
         <View style={styles.excerptStyle}>
             <HtmlText html={this._removeHTMLLink(post.item.excerpt.rendered)} style={{color:'#FFFFFF'}}/>
+            <View style={{width:.25*width}}>
+              <Button 
+                title="More" 
+                type="outline" 
+                raised={true} 
+                buttonStyle={{backgroundColor:Colors.primary, borderColor:'#F8F8F8', borderWidth:1}}
+                onPress={() => {this.setModalVisible(true)}}
+              />
+            </View>
         </View>
       )
     }
@@ -94,22 +115,50 @@ class SinglePost extends Component {
     }
   }
   render(){
-    const { id, title} = this.props.post.item;
+    const { id, title, content} = this.props.post.item;
     return (
-      <TouchableWithoutFeedback 
-        onPress = {() =>{this.props.SelectPostID(id)}}>
-        <View style={this._titleBarBackgroundColor()}>
-          <CardSection>
-              <Text style={this._titleBarTextStyle()}>
-                {this._cleanText(title.rendered)}
-              </Text>          
-          </CardSection>          
+      <View>
+        <TouchableWithoutFeedback 
+          onPress = {() =>{this.props.SelectPostID(id)}}>
+          <View style={this._titleBarBackgroundColor()}>
+            <CardSection>
+                <Text style={this._titleBarTextStyle()}>
+                  {this._cleanText(title.rendered)}
+                </Text>          
+            </CardSection>          
 
-          <View style={{backgroundColor:'rgb(13,71,161)'}}>
-            {this._renderExcerpt()}
+            <View style={{backgroundColor:'rgb(13,71,161)'}}>
+              {this._renderExcerpt()}
+            </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+
+            <ScrollView contentContainerStyle={{flex:1, marginTop:22}}>
+             <View style={{flex:1}}>
+              <WebView 
+                style={{flex:1}} 
+                originWhitelist={['*']}
+                source={{html: content.rendered}}
+              />
+             </View>
+              <TouchableHighlight
+                style={styles.buttonClose}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Text><Icon name="times-circle"  size={FontSize.FONTSIZE} /></Text>
+              </TouchableHighlight>
+            </ScrollView>
+
+        </Modal>
+      </View>
 
     )
   }
@@ -117,7 +166,14 @@ class SinglePost extends Component {
 
 const styles = StyleSheet.create({
   excerptStyle:{
-    padding: FontSize.FONTSIZE
+    padding: FontSize.FONTSIZE,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  buttonClose:{
+    position:'absolute',
+    top: 0,
+    right:15
   }
 });
 
