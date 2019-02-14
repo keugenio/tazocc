@@ -1,5 +1,10 @@
 import React from 'react';
-import {View,Text, StyleSheet, AsyncStorage, FlatList} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import reducers from '../src/reducers';
+import LocalPosts from '../src/components/LocalPosts';
+
 import Colors from '../constants/Colors';
 import {FONTSIZE} from '../constants'
 
@@ -14,52 +19,14 @@ export default class News extends React.Component {
       fontWeight: 'bold',
     },
   };
-  constructor(props){
-    super(props);
-    this.state ={
-      dataSource:[]
-    }
-  }
 
-  componentWillMount(){
-    AsyncStorage.getItem('localStorage').then ((result) => {
-      this.setState({dataSource:JSON.parse(result)});
-    })
-  }
-  _getItem = function({item}){
-    clean = function (text) {
-      var mapObj = {
-          '&#8211;':"",
-          '&amp;':"&",
-          'Fw: ':"",
-          'Fwd: ':""
-      }
-
-      cleanedText = text.replace(/&#8211|&amp|Fw: |Fwd: /g, function(matched){
-        return mapObj[matched];
-      });
-
-      cleanedText=cleanedText.replace('undefined; ', "");
-      cleanedText=cleanedText.replace('undefined; ', "");
-
-      return cleanedText
-    }
-    let cleanedText = clean(item.title.rendered);
-
-    return(
-      <Text>{cleanedText}</Text>      
-    )
-  }
-    
   render() {
     return( 
-      <View style={styles.container}>
-      <FlatList
-        data={this.state.dataSource}
-        renderItem={this._getItem}
-        keyExtractor={(item, index) => index.toString()} 
-      />
-      </View>
+      <Provider store={createStore(reducers)}>
+        <View style={styles.container}>
+          <LocalPosts />
+        </View>
+      </Provider>
     )
   }
 }

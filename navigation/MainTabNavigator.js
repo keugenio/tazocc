@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Linking } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
@@ -8,6 +8,26 @@ import Login from '../screens/LoginScreen';
 import News from '../screens/News';
 import Colors from '../constants/Colors';
 import {AddButton} from '../src/components/AddButton';
+import TestRedux from '../TestRedux';
+
+
+const TestStack = createStackNavigator({
+  Test: TestRedux,
+});
+
+TestStack.navigationOptions = {
+  tabBarLabel: 'Redux',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-home`
+          : 'md-home'
+      }
+    />
+  ),
+};
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -32,13 +52,16 @@ const EmailStack = createStackNavigator({
 });
 
 EmailStack.navigationOptions = {
-  tabBarLabel: 'Email TAZ',
+  tabBarLabel: null,
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios' ? 'ios-mail' : 'md-mail'}
     />
   ),
+  tabBarOnPress:(()=>{
+    Linking.openURL('mailto:teamazoutrigger@gmail.com?subject=Inquiry from TAZ App');
+  })
 };
 
 const NewsStack = createStackNavigator({
@@ -65,13 +88,17 @@ AuthStack.navigationOptions = {
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios' ? 'ios-log-in' : 'md-log-in'}
+      onPress
     />
   ),
 };
 
+
+
 export default createBottomTabNavigator(
 
   {
+    TestStack,
     HomeStack,
     EmailStack,
     More: {

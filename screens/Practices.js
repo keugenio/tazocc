@@ -15,7 +15,10 @@ export default Practices
 
 const styles = StyleSheet.create({
   container:{
+    height:'100%',
     backgroundColor:Colors.mainBg,
+    alignItems:'center',
+    justifyContent:'center',
   },
   p:{
     fontSize:FontSize.FONTSIZE,

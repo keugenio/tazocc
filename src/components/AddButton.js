@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
-import {Animated, TouchableHighlight, View, Text, Image, Modal} from "react-native";
+import {Animated, TouchableHighlight, View, Text, Image, Modal, StyleSheet} from "react-native";
 import Icon from '@expo/vector-icons/FontAwesome';
-const SIZE = 80;
+import {WebBrowser} from 'expo';
 import Colors from '../../constants/Colors';
 import Events from '../../screens/Events';
 import Practices from '../../screens/Practices';
 import AboutTAZ from '../../screens/AboutTAZ';
+import Sponsors from '../../screens/Sponsors';
 
+const SIZE = 80;
 class AddButton extends Component {
     state = {
         modalVisible: false,
-        screen:''
+        activeScreen:''
     };
 
     setModalVisible(visible) {
@@ -24,11 +26,35 @@ class AddButton extends Component {
             duration: 300
         }).start();
     };
-    _openModal(screen){
-        this.setState({screen})
+    _openModal(activeScreen){
+        this.setState({activeScreen})
         this.setModalVisible(true);
+        this.toggleView();
     }
+    _getScreen(){
+        
+        switch(this.state.activeScreen){
+            case 'practices':
+                return <Practices />;
+                break;
+            case 'events':
+                return <Events />; 
+                break;
+            case 'aboutTAZ':
+                return <AboutTAZ />;    
+                break; 
+            case 'sponsors':
+                return <Sponsors />;    
+                break;
+            
+            default:
+                return (<View><Text>no screen available</Text></View>)
+        }
+    }
+    
     render() {
+        const {shadow}=styles;
+        
         const firstX = this.mode.interpolate({
             inputRange: [0, 1],
             outputRange: [20, -40]
@@ -101,7 +127,7 @@ class AddButton extends Component {
         return (
             <View style={{
                 position: 'absolute',
-                alignItems: 'center'
+                alignItems: 'center',
             }}>
                 <Animated.View style={{
                     position: 'absolute',
@@ -112,14 +138,14 @@ class AddButton extends Component {
                     <TouchableHighlight
                         onPress={() => { this._openModal('practices')
                         }}
-                        style={{
+                        style={[shadow,{
                             alignItems: 'center',
                             justifyContent: 'center',
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
                             backgroundColor: '#48A2F8'
-                        }}
+                        }]}
                     >
                         <Image source={require('../images/paddling101.png')} style={{height:40, width:40, tintColor:'#F8F8F8'}}/>
                     </TouchableHighlight>
@@ -133,14 +159,14 @@ class AddButton extends Component {
                     <TouchableHighlight
                         onPress={() => { this._openModal('aboutTAZ')
                         }}
-                        style={{
+                        style={[shadow,{
                             alignItems: 'center',
                             justifyContent: 'center',
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
                             backgroundColor: '#48A2F8'
-                        }}
+                        }]}
                     >
                     <Image source={require('../images/hibiscus.png')} style={{height:SIZE/2, width:SIZE/2, tintColor:'#F8F8F8'}}/>
                     </TouchableHighlight>
@@ -153,16 +179,16 @@ class AddButton extends Component {
                     opacity
                 }}>
                     <TouchableHighlight
-                        onPress={() => { this._openModal('myScoraInfo')
+                        onPress={() => { WebBrowser.openBrowserAsync('https://www.scoraregistration.com/paddler_login');; this.toggleView()
                         }}
-                        style={{
+                        style={[shadow,{
                             alignItems: 'center',
                             justifyContent: 'center',
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
                             backgroundColor: '#48A2F8'
-                        }}
+                        }]}
                     >
                         <Icon name="user" size={30} color="#F8F8F8"/>
                     </TouchableHighlight>
@@ -175,16 +201,16 @@ class AddButton extends Component {
                     opacity
                 }}>
                     <TouchableHighlight
-                        onPress={() => { this._openModal('waivers')
+                        onPress={() => { WebBrowser.openBrowserAsync('https://waiver.smartwaiver.com/w/5bfc43ae42c8a/web/');; this.toggleView()
                         }}
-                        style={{
+                        style={[shadow,{
                             alignItems: 'center',
                             justifyContent: 'center',
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
                             backgroundColor: '#48A2F8'
-                        }}
+                        }]}
                     >
                     <Image source={require('../images/smart_waiver.png')} style={{height:SIZE/3, width:SIZE/3, tintColor:'#F8F8F8'}}/>
                     </TouchableHighlight>
@@ -197,16 +223,16 @@ class AddButton extends Component {
                     opacity
                 }}>
                     <TouchableHighlight
-                        onPress={() => { this._openModal('shopTAZ')
+                        onPress={() => { WebBrowser.openBrowserAsync('http://tazocc.com/store/'); this.toggleView()
                         }}
-                        style={{
+                        style={[shadow,{
                             alignItems: 'center',
                             justifyContent: 'center',
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
                             backgroundColor: '#48A2F8'
-                        }}
+                        }]}
                     >
                     <Image source={require('../images/shopping-cart.png')} style={{height:SIZE/3, width:SIZE/3, tintColor:'#F8F8F8'}}/>
                     </TouchableHighlight>
@@ -220,7 +246,7 @@ class AddButton extends Component {
                     <TouchableHighlight
                         onPress={() => {this._openModal('events');
                         }}
-                        style={{
+                        style={[shadow,{
                             position: 'absolute',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -228,7 +254,7 @@ class AddButton extends Component {
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
                             backgroundColor: '#48A2F8'
-                        }}
+                        }]}
                     >
                     <Image source={require('../images/events.png')} style={{height:SIZE/3, width:SIZE/3, tintColor:'#F8F8F8'}}/>
                     </TouchableHighlight>
@@ -242,15 +268,15 @@ class AddButton extends Component {
                     <TouchableHighlight
                         onPress={() => { this._openModal('sponsors')
                         }}
-                        style={{
+                        style={[shadow,{
                             position: 'absolute',
                             alignItems: 'center',
                             justifyContent: 'center',
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
-                            backgroundColor: '#48A2F8'
-                        }}
+                            backgroundColor: '#48A2F8'                        
+                        }]}
                     >
                     <Image source={require('../images/sponsors.png')} style={{height:SIZE/3, width:SIZE/3, tintColor:'#F8F8F8'}}/>
                     </TouchableHighlight>
@@ -286,8 +312,7 @@ class AddButton extends Component {
                     Alert.alert('Modal has been closed.');
                     }}>
                     <View style={{marginTop: 22}}>
-                    <View>
-                        <Text>{this.state.screen}</Text>
+                        {this._getScreen(this.state.activeScreen)}
                         <View style={{position:'absolute', right:5, top:5}}>
                             <TouchableHighlight
                             onPress={() => {
@@ -297,10 +322,21 @@ class AddButton extends Component {
                             </TouchableHighlight>
                         </View>
                     </View>
-                    </View>
                 </Modal>                
             </View>
         );
     }
 }
 export {AddButton};
+
+const styles=StyleSheet.create({
+    shadow:{
+        shadowColor: '#000',
+        shadowOffset: { width: 5, height: 5 },
+        shadowOpacity: 0.8,
+        shadowRadius: 5,     
+        borderWidth:1,  
+        borderColor:'#F8F8F8'  
+    }
+
+})
