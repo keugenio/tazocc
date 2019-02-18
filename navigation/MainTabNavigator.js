@@ -11,24 +11,6 @@ import {AddButton} from '../src/components/AddButton';
 import TestRedux from '../TestRedux';
 
 
-const TestStack = createStackNavigator({
-  Test: TestRedux,
-});
-
-TestStack.navigationOptions = {
-  tabBarLabel: 'Redux',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-home`
-          : 'md-home'
-      }
-    />
-  ),
-};
-
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
 });

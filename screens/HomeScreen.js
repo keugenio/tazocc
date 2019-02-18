@@ -33,7 +33,7 @@ export default class HomeScreen extends React.Component {
         AsyncStorage.getItem('localIDs').then((localDataSource) =>{
 
           if (localDataSource && localDataSource.length>0){
-            console.log('lds:', localDataSource);
+            // console.log('lds:', localDataSource);
             let localIDs = JSON.parse(localDataSource);
             let newPostIDs = []
             responseJson.forEach((dwnPost) =>{
@@ -41,7 +41,6 @@ export default class HomeScreen extends React.Component {
                 newPostIDs.push(dwnPost.id);
               }
             })
-            console.log("new posts: ", newPostIDs)
             AsyncStorage.setItem('newPostIDs', JSON.stringify(newPostIDs));
             AsyncStorage.setItem('newPostCount', newPostIDs.length.toString());
 
@@ -101,7 +100,7 @@ export default class HomeScreen extends React.Component {
     });
     AsyncStorage.getItem('newPostIDs').then((results) =>{
       if (results){
-        console.log("newPostsIDs", JSON.parse(results));
+        //console.log("newPostsIDs", JSON.parse(results));
       }
       else
         console.log('newPostsIDs empty');

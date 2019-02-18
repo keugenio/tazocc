@@ -10,7 +10,6 @@ class LocalPosts extends Component {
   }
 
   render(){
-    console.log("lds", this.props.localDataSource );
     
     return(
       <FlatList

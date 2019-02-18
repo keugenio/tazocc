@@ -8,6 +8,7 @@ import * as actions from '../actions';
 import FontSize from '../../constants/FontSize';
 import Colors from '../../constants/Colors';
 import Icon from '@expo/vector-icons/FontAwesome';
+import moment from 'moment';
 
 const {height, width} = Dimensions.get('window');
 
@@ -100,7 +101,7 @@ class SinglePost extends Component {
       return (
         <CardSection>
             <Text style={this.props.textStyle}>
-              {this._cleanText(title.rendered)}
+              {this._cleanText(title.rendered)} 
             </Text>          
         </CardSection>        
       )
@@ -114,7 +115,19 @@ class SinglePost extends Component {
       )
     }
   }
+  _isNewPost(){
+    if (this.props.aNewPost)
+      return (
+        <View style={{marginLeft: FontSize.FONTSIZE}}>
+          <Icon name="star" size={FontSize.FONTSIZE} color={'#FFFF00'}/>
+        </View>
+      )
+    else
+        return null
+  }
   render(){
+    console.log("post Item:", this.props.post.item.date);
+    
     const { id, title, content} = this.props.post.item;
     return (
       <View>
@@ -122,9 +135,19 @@ class SinglePost extends Component {
           onPress = {() =>{this.props.SelectPostID(id)}}>
           <View style={this._titleBarBackgroundColor()}>
             <CardSection>
+            <View style={{flex:2, flexDirection:'row', alignItems:'stretch'}}>
+              <View style={{flex:1}}>
                 <Text style={this._titleBarTextStyle()}>
-                  {this._cleanText(title.rendered)}
-                </Text>          
+                  {this._cleanText(title.rendered)} 
+                </Text> 
+              </View>
+              <View style={{flex:1, alignItems:'flex-end', flexDirection:'row', justifyContent:'flex-end'}}>
+                <Text style={[this._titleBarTextStyle(), {textAlign:'right'}]}>
+                  {moment(this.props.postDate).format("MMM D")} 
+                </Text>  
+                {this._isNewPost()}                        
+              </View>              
+            </View>
             </CardSection>          
 
             <View style={{backgroundColor:'rgb(13,71,161)'}}>
@@ -178,8 +201,15 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, ownProps) => {
+
   const expanded = state.selectedPostID === ownProps.post.item.id;
-  return {expanded:expanded}
+  const aNewPost = state.newPosts.postIDs.includes(ownProps.post.item.id)
+
+  return {
+    expanded:expanded,
+    aNewPost:aNewPost,
+    postDate: ownProps.post.item.date
+  }
 };
 
 export default connect(mapStateToProps, actions)(SinglePost);
