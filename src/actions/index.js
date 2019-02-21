@@ -1,6 +1,2 @@
-export const SelectPostID = (postID) => {
-  return {
-      type: 'select_post',
-      payload: postID
-  };
-};
+export * from './SelectPost';
+export * from './UpdateNewPosts';

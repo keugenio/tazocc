@@ -1,14 +1,19 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import reducers from '../src/reducers';
+import {View,Text, StyleSheet} from 'react-native';
+import { connect } from 'react-redux';
+import * as actions from '../src/actions';
+
 import LocalPosts from '../src/components/LocalPosts';
 
 import Colors from '../constants/Colors';
 import {FONTSIZE} from '../constants'
 
-export default class News extends React.Component {
+class News extends React.Component {
+  constructor(props){
+    super(props)
+    this._handleOnPress=this._handleOnPress.bind(this);
+
+  }
   static navigationOptions = {
     title: 'TAZ News and Messages',
     headerStyle: {
@@ -19,17 +24,32 @@ export default class News extends React.Component {
       fontWeight: 'bold',
     },
   };
-
-  render() {
+  _handleOnPress(id){
+    const {newPostsCount, newPostIDs} = this.props.newPosts;
+    const index = newPostIDs.indexOf(id);
+    if (index>=0){      
+      this.props.UpdateNewPostIDs(newPostIDs, id);
+      this.props.UpdateNewPostCount(newPostsCount);
+    }
+  }
+  render() {    
     return( 
-      <Provider store={createStore(reducers)}>
         <View style={styles.container}>
-          <LocalPosts />
+          <LocalPosts onPress={this._handleOnPress} newPosts={this.props.newPosts}/>
         </View>
-      </Provider>
+
     )
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    newPosts:{
+      newPostsCount: state.newPosts.postCount,
+      newPostIDs: state.newPosts.postIDs
+    }
+  }
+}
+export default connect(mapStateToProps, actions)(News);
 
 const styles = StyleSheet.create({
   container:{

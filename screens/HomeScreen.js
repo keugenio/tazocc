@@ -3,25 +3,31 @@ import {Image,ScrollView,StyleSheet,Text,View,Dimensions, ActivityIndicator, Asy
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Philosophies from '../src/components/Philosophies';
+import { connect } from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = { 
       isLoading: true,
       dataSource:[],
       newPosts:[],
+      newPostCount:0
     } 
     this._showStorage = this._showStorage.bind(this);
   }
+  componentWillReceiveProps(){
+    this.setState({newPostCount: this.props.newPostCount})
+  }
+
   _keyExtractor = (item, index) => item.id;
   static navigationOptions = {
     header: null,
   };
 
-  async componentWillMount(){
+  async componentWillMount(){  
     try {
       fetch('http://www.tazocc.com//wp-json/wp/v2/posts')
       .then((response) => response.json())
@@ -33,7 +39,6 @@ export default class HomeScreen extends React.Component {
         AsyncStorage.getItem('localIDs').then((localDataSource) =>{
 
           if (localDataSource && localDataSource.length>0){
-            // console.log('lds:', localDataSource);
             let localIDs = JSON.parse(localDataSource);
             let newPostIDs = []
             responseJson.forEach((dwnPost) =>{
@@ -137,7 +142,14 @@ export default class HomeScreen extends React.Component {
           <TouchableOpacity onPress={this._clearEverything}>
             <Text>clear everything</Text>
           </TouchableOpacity>
-          <Text>{this.state.newPosts.length}</Text>     
+          <TouchableOpacity onPress={()=>{
+              
+              this.setState({newPostCount:-1});
+            
+            }}>
+            <Text>rerender me</Text>
+          </TouchableOpacity>          
+          <Text>new posts: {this.props.newPostCount} & {this.state.newPostCount}</Text>     
           <View style={styles.headerContainer}>
             <Image source={require('../src/images/header_copy.png')} style={styles.headerImageStyle}/>
           </View>
@@ -164,6 +176,14 @@ export default class HomeScreen extends React.Component {
     );
   }
 }
+mapStateToProps = (state) => {
+  
+  return {
+    newPostCount: state.newPosts.postCount
+  }
+}
+
+export default connect(mapStateToProps)(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {

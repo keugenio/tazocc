@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Platform, Linking } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 import TabBarIcon from '../components/TabBarIcon';
@@ -14,6 +14,7 @@ import TestRedux from '../TestRedux';
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
 });
+
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
@@ -56,8 +57,9 @@ NewsStack.navigationOptions = {
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios' ? 'ios-notifications' : 'md-notifications'}
+      onPress={this._hello}
     />  
-  ),
+  ), 
 };
 
 const AuthStack = createStackNavigator({
@@ -70,15 +72,12 @@ AuthStack.navigationOptions = {
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios' ? 'ios-log-in' : 'md-log-in'}
-      onPress
     />
-  ),
+  )
 };
 
 
-
 export default createBottomTabNavigator(
-
   {
     HomeStack,
     EmailStack,

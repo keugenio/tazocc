@@ -15,4 +15,5 @@ export const EMPLOYEE_SAVE_SUCCESS = 'employee_save_success';
 
 export const UPDATE_POST_COUNT = 'update_post_count';
 export const UPDATE_POST_IDS = 'update_post_ids';
+export const SELECT_POST = "select_post";
 

@@ -4,7 +4,7 @@ import { Button, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 import HtmlText from 'react-native-html-to-text';
 import { CardSection } from '../components/common/CardSection';
-import * as actions from '../actions';
+import {SelectPostID} from '../actions';
 import FontSize from '../../constants/FontSize';
 import Colors from '../../constants/Colors';
 import Icon from '@expo/vector-icons/FontAwesome';
@@ -13,9 +13,13 @@ import moment from 'moment';
 const {height, width} = Dimensions.get('window');
 
 class SinglePost extends Component {
-  state = {
-    modalVisible: false,
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      modalVisible: false,
+    }
+    this._selectPostID = this._selectPostID.bind(this)
+  }
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
@@ -23,7 +27,10 @@ class SinglePost extends Component {
   componentWillUpdate(){
     LayoutAnimation.spring();
   }
-
+  _selectPostID(id){   
+    this.props.SelectPostID(id);
+    this.props.onPress(id);
+  }
   _cleanText = function (text) {
     var mapObj = {
         '&#8211;':"",
@@ -41,13 +48,11 @@ class SinglePost extends Component {
 
     return cleanedText
   }
-
   _removeHTMLLink = function (text){
     cleanedText = text.replace(/<a href.*a>/, "");
     
     return cleanedText;
   }
-
   _renderExcerpt(){
     const {post, expanded} = this.props;
     if (expanded){
@@ -115,7 +120,7 @@ class SinglePost extends Component {
       )
     }
   }
-  _isNewPost(){
+  _isNewPost(){ 
     if (this.props.aNewPost)
       return (
         <View style={{marginLeft: FontSize.FONTSIZE}}>
@@ -126,13 +131,13 @@ class SinglePost extends Component {
         return null
   }
   render(){
-    console.log("post Item:", this.props.post.item.date);
     
     const { id, title, content} = this.props.post.item;
     return (
+      
       <View>
         <TouchableWithoutFeedback 
-          onPress = {() =>{this.props.SelectPostID(id)}}>
+          onPress = {() =>{this._selectPostID(id)}}>
           <View style={this._titleBarBackgroundColor()}>
             <CardSection>
             <View style={{flex:2, flexDirection:'row', alignItems:'stretch'}}>
@@ -143,7 +148,7 @@ class SinglePost extends Component {
               </View>
               <View style={{flex:1, alignItems:'flex-end', flexDirection:'row', justifyContent:'flex-end'}}>
                 <Text style={[this._titleBarTextStyle(), {textAlign:'right'}]}>
-                  {moment(this.props.postDate).format("MMM D")} 
+                  {moment(this.props.postDate).format("MMM D")}
                 </Text>  
                 {this._isNewPost()}                        
               </View>              
@@ -187,6 +192,15 @@ class SinglePost extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  
+  const expanded = state.selectedPostID === ownProps.post.item.id;
+
+  return {
+    expanded:expanded,
+  }
+};
+
 const styles = StyleSheet.create({
   excerptStyle:{
     padding: FontSize.FONTSIZE,
@@ -200,16 +214,5 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = (state, ownProps) => {
 
-  const expanded = state.selectedPostID === ownProps.post.item.id;
-  const aNewPost = state.newPosts.postIDs.includes(ownProps.post.item.id)
-
-  return {
-    expanded:expanded,
-    aNewPost:aNewPost,
-    postDate: ownProps.post.item.date
-  }
-};
-
-export default connect(mapStateToProps, actions)(SinglePost);
+export default connect(mapStateToProps, {SelectPostID})(SinglePost);
