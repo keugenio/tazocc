@@ -9,7 +9,28 @@ import * as actions from '../src/actions'
 const {width, height} = Dimensions.get('window');
 
 class HomeScreen extends React.Component {
-
+  static navigationOptions = {
+    title: 'Team Arizona Outrigger Canoe Club',
+    headerStyle: {
+      backgroundColor: Colors.mainBg,
+    },
+    headerTintColor: '#FFF',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  };
+  componentWillMount(){
+    //update redux store with local posts
+    AsyncStorage.getItem('localDataSource').then((result) =>{
+      this.props.SetLocalDataSource(JSON.parse(result))
+    });
+    AsyncStorage.getItem('newPostIDs').then((result) =>{
+      this.props.SetNewPostIDs(JSON.parse(result))
+    });
+    AsyncStorage.getItem('newPostCount').then((result) =>{
+      this.props.SetNewPostCount(parseInt(result))
+    });    
+  }  
   _clearOnePost() {
     AsyncStorage.getItem('localDataStorage').then((results) =>{
 

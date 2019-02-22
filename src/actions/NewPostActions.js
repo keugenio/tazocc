@@ -1,4 +1,4 @@
-import {UPDATE_NEWPOST_COUNT, UPDATE_NEWPOST_IDS} from './types';
+import {UPDATE_NEWPOST_COUNT, SET_NEWPOST_IDS, UPDATE_NEWPOST_IDS, SET_NEWPOST_COUNT} from './types';
 
 export const UpdateNewPostCount = (currentPostCount) => {
   return {
@@ -11,9 +11,22 @@ export const UpdateNewPostIDs = (localPostIDsArray, key) => {
     const index = localPostIDsArray.indexOf(key);
     if (index>=0)
       localPostIDsArray.splice(index,1)
-
+    
     return {
       type: UPDATE_NEWPOST_IDS,
       payload: localPostIDsArray
     }
+}
+export const SetNewPostIDs = (localPostIDsArray) => {
+  return {
+    type: SET_NEWPOST_IDS,
+    payload: localPostIDsArray
+  }
+}
+
+export const SetNewPostCount = (newPostCount) => {
+  return {
+    type: SET_NEWPOST_COUNT,
+    payload: newPostCount
+  }
 }

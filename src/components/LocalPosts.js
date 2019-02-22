@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {FlatList, View, SafeAreaView} from 'react-native';
+import {FlatList, View,Text, SafeAreaView} from 'react-native';
 import { connect } from 'react-redux';
 import SinglePost from './SinglePost';
 import Colors from '../../constants/Colors';
@@ -11,19 +11,16 @@ class LocalPosts extends Component {
   }
 
   _renderItem = function (post){    
-
-    
     const {newPostIDs}= this.props.newPosts;
     const { id } = post.item
     
     let aNewPost = false;
     if (newPostIDs.includes(id))
       aNewPost = true;
-
     return <SinglePost post = {post} textStyle={{color:Colors.primary}} onPress={this.props.onPress} aNewPost={aNewPost}/>
   }
 
-  render(){    
+  render(){            
     return(
       <SafeAreaView style={{flex:1, backgroundColor:Colors.mainBg}}>
         <FlatList
@@ -38,7 +35,7 @@ class LocalPosts extends Component {
 }
 const mapStateToProps = state => {
   return {
-    localDataSource: state.localDataSource
+    localDataSource: state.localPosts.localDataSource
   }
 }
 export default connect(mapStateToProps)(LocalPosts);

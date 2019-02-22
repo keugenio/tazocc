@@ -1,3 +1,3 @@
 export * from './SelectPost';
-export * from './UpdateNewPosts';
-export * from './UpdateLocalPosts';
+export * from './NewPostActions';
+export * from './LocalPostsActions';
