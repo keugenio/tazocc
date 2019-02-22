@@ -21,9 +21,12 @@ class HomeScreen extends React.Component {
   };
   componentWillMount(){
     //update redux store with local posts
-    AsyncStorage.getItem('localDataSource').then((result) =>{
+    AsyncStorage.getItem('localDataSource').then((result) =>{      
       this.props.SetLocalDataSource(JSON.parse(result))
     });
+    AsyncStorage.getItem('localIDs').then((result) =>{
+      this.props.SetLocalPostIds(JSON.parse(result))
+    });    
     AsyncStorage.getItem('newPostIDs').then((result) =>{
       this.props.SetNewPostIDs(JSON.parse(result))
     });

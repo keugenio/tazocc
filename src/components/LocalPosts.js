@@ -33,7 +33,7 @@ class LocalPosts extends Component {
     )
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = state => {  
   return {
     localDataSource: state.localPosts.localDataSource
   }

@@ -21,9 +21,9 @@ export const SetLocalPostIds = (updatedLocalPostIDs) =>{
   }
 }
 
-export const SetLocalDataSource = (updatedLocalPostIDs) =>{
+export const SetLocalDataSource = (updatedLocalDataSource) =>{  
   return {
     type: SET_LOCAL_DATASOURCE,
-    payload: updatedLocalPostIDs
+    payload: updatedLocalDataSource
   }
 }

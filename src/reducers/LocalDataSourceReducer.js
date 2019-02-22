@@ -8,7 +8,7 @@ const INTIAL_STATE = {
 export default (state = INTIAL_STATE, action) => {
 
     switch(action.type){
-      case SET_LOCAL_DATASOURCE:
+      case SET_LOCAL_DATASOURCE:        
         return {...state, localDataSource: action.payload }; 
       case UPDATE_LOCAL_DATASOURCE:
         return {...state, localDataSource: action.payload }; 
