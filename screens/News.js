@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,Text, StyleSheet} from 'react-native';
+import {View, SafeAreaView, StyleSheet} from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../src/actions';
 
@@ -34,9 +34,11 @@ class News extends React.Component {
   }
   render() {    
     return( 
+      <SafeAreaView style={styles.container}>
         <View style={styles.container}>
           <LocalPosts onPress={this._handleOnPress} newPosts={this.props.newPosts}/>
         </View>
+      </SafeAreaView>
 
     )
   }

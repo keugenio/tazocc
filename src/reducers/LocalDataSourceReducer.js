@@ -1,9 +1,18 @@
-import {AsyncStorage } from 'react-native';
+import { UPDATE_LOCAL_DATASOURCE, UPDATE_LOCAL_POSTIDS} from '../actions/types';
 
-// let localDataSource = [];
-// const localStorage = AsyncStorage.getItem('localDataStorage');
-// localDataSource = JSON.parse(localStorage);
+const INTIAL_STATE = {
+    localDataSource: [],
+    localPostIDs: []
+};
 
-import localPosts from './localPosts.json';
+export default (state = INTIAL_STATE, action) => {
 
-export default () => localPosts;
+    switch(action.type){
+        case UPDATE_LOCAL_DATASOURCE:
+          return {...state, localDataSource: action.payload }; 
+        case UPDATE_LOCAL_POSTIDS:
+          return {...state, localPostIDs: action.payload }; 
+        default:
+          return state;
+    }
+};

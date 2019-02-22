@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, TouchableWithoutFeedback, TouchableHighlight, StyleSheet, LayoutAnimation, Dimensions, Modal, WebView} from 'react-native';
+import { ScrollView, SafeAreaView, View, TouchableWithoutFeedback, TouchableHighlight, StyleSheet, LayoutAnimation, Dimensions, Modal, WebView} from 'react-native';
 import { Button, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 import HtmlText from 'react-native-html-to-text';
@@ -134,8 +134,8 @@ class SinglePost extends Component {
     
     const { id, title, content} = this.props.post.item;
     return (
-      
-      <View>
+      <SafeAreaView style={{flex:1, backgroundColor:Colors.mainBg}}>
+        <View>
         <TouchableWithoutFeedback 
           onPress = {() =>{this._selectPostID(id)}}>
           <View style={this._titleBarBackgroundColor()}>
@@ -160,20 +160,23 @@ class SinglePost extends Component {
             </View>
           </View>
         </TouchableWithoutFeedback>
+        
         <Modal
           animationType="slide"
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
+
           }}>
 
-            <ScrollView contentContainerStyle={{flex:1, marginTop:22}}>
-             <View style={{flex:1}}>
+            <ScrollView contentContainerStyle={{flex:1, marginTop:FONTSIZE}}>
+             <View style={{flex:1, marginTop:FontSize.FONTSIZE*4}}>
               <WebView 
                 style={{flex:1}} 
                 originWhitelist={['*']}
                 source={{html: content.rendered}}
+                
               />
              </View>
               <TouchableHighlight
@@ -187,7 +190,7 @@ class SinglePost extends Component {
 
         </Modal>
       </View>
-
+      </SafeAreaView>
     )
   }
 }
@@ -209,7 +212,7 @@ const styles = StyleSheet.create({
   },
   buttonClose:{
     position:'absolute',
-    top: 0,
+    top: FontSize.FONTSIZE*2,
     right:15
   }
 });

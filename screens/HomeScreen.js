@@ -4,73 +4,11 @@ import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Philosophies from '../src/components/Philosophies';
 import { connect } from 'react-redux';
+import * as actions from '../src/actions'
 
 const {width, height} = Dimensions.get('window');
 
 class HomeScreen extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = { 
-      isLoading: true,
-      dataSource:[],
-      newPosts:[],
-      newPostCount:0
-    } 
-    this._showStorage = this._showStorage.bind(this);
-  }
-  componentWillReceiveProps(){
-    this.setState({newPostCount: this.props.newPostCount})
-  }
-
-  _keyExtractor = (item, index) => item.id;
-  static navigationOptions = {
-    header: null,
-  };
-
-  async componentWillMount(){  
-    try {
-      fetch('http://www.tazocc.com//wp-json/wp/v2/posts')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({ 
-          isLoading: false,
-        });
-        
-        AsyncStorage.getItem('localIDs').then((localDataSource) =>{
-
-          if (localDataSource && localDataSource.length>0){
-            let localIDs = JSON.parse(localDataSource);
-            let newPostIDs = []
-            responseJson.forEach((dwnPost) =>{
-              if (localIDs.includes(dwnPost.id)==false){
-                newPostIDs.push(dwnPost.id);
-              }
-            })
-            AsyncStorage.setItem('newPostIDs', JSON.stringify(newPostIDs));
-            AsyncStorage.setItem('newPostCount', newPostIDs.length.toString());
-
-          } else { // add all the downloaded IDSto localIDs, set the postCount and set the localDataStorage
-            alert('no previous post, adding everything');
-            let localIDArr = [];
-            responseJson.forEach(post =>{
-              localIDArr.push(post.id);
-            })
-            AsyncStorage.setItem('localIDs', JSON.stringify(localIDArr));
-            AsyncStorage.setItem('newPostIDs', JSON.stringify(localIDArr));
-            AsyncStorage.setItem('newPostCount', localIDArr.length.toString());
-            AsyncStorage.setItem('localDataStorage', JSON.stringify(responseJson));
-          }        
-        })          
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    }
-    catch (error) {
-      console.error(error);
-    }   
-  }
 
   _clearOnePost() {
     AsyncStorage.getItem('localDataStorage').then((results) =>{
@@ -86,6 +24,8 @@ class HomeScreen extends React.Component {
           localIDsArr.push(post.id);
         })
         AsyncStorage.setItem('localIDs', JSON.stringify(localIDsArr));
+        AsyncStorage.setItem('newPostIDs', JSON.stringify(localIDsArr));
+        AsyncStorage.setItem('newPostCount', localIDsArr.length.toString());
       }
       else
         console.log('storage empty');
@@ -96,38 +36,48 @@ class HomeScreen extends React.Component {
   }
   _showStorage() {
 
-    AsyncStorage.getItem('newPostCount').then((results) =>{
+     AsyncStorage.getItem('newPostCount').then((results) =>{
       if (results){
         console.log("newPostCount", results);
       }
       else
         console.log('newPostCount empty');
     });
-    AsyncStorage.getItem('newPostIDs').then((results) =>{
+     AsyncStorage.getItem('newPostIDs').then((results) =>{
       if (results){
-        //console.log("newPostsIDs", JSON.parse(results));
+        console.log("newPostsIDs", JSON.parse(results));
       }
       else
         console.log('newPostsIDs empty');
     });
-    AsyncStorage.getItem('localIDs').then((results) =>{
+     AsyncStorage.getItem('localIDs').then((results) =>{
       if (results){
         console.log("localIDs", JSON.parse(results));
       }
       else
         console.log('localIDs empty');
-    });        
+    }); 
+     AsyncStorage.getItem('localDataStorage').then((results) =>{
+      if (results){
+        console.log("localDataStorage", JSON.parse(results));
+      }
+      else
+        console.log('localDS empty');
+    });  
+
+  }
+  _getUnreadPosts(){
+    switch (this.props.newPostCount) {
+      case (this.props.newPostCount>1):
+        return <Text>You have {this.props.newPostCount} unread posts: </Text>
+      case (this.props.newPostCount=1):
+        return <Text>You have 1 unread post </Text>
+      default:
+        break;
+    }
   }
 
-
   render() {
-    if(this.state.isLoading){
-      return(
-        <View style={{flex: 1, padding: 20, justifyContent:'center', alignItems:'center', backgroundColor:Colors.mainBg}}>
-          <ActivityIndicator/>
-        </View>
-      )
-    }
     return (
       <View style={styles.container}>
 
@@ -137,26 +87,19 @@ class HomeScreen extends React.Component {
             <Text>clear post</Text>
           </TouchableOpacity>   
           <TouchableOpacity onPress={this._showStorage}>
-            <Text>show storage</Text>
+            <Text>show storage in console log</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._clearEverything}>
             <Text>clear everything</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{
-              
-              this.setState({newPostCount:-1});
-            
-            }}>
-            <Text>rerender me</Text>
-          </TouchableOpacity>          
-          <Text>new posts: {this.props.newPostCount} & {this.state.newPostCount}</Text>     
+          </TouchableOpacity>         
+
+               
           <View style={styles.headerContainer}>
             <Image source={require('../src/images/header_copy.png')} style={styles.headerImageStyle}/>
           </View>
 
           <View style={styles.mainBodyContainer}>
           
-
             <Image source={require('../src/images/adr2018.jpg')} style={styles.imageStyle}/>             
             
             <View style={{marginVertical:FontSize.FONTSIZE*2}}>
@@ -177,13 +120,12 @@ class HomeScreen extends React.Component {
   }
 }
 mapStateToProps = (state) => {
-  
   return {
     newPostCount: state.newPosts.postCount
   }
 }
 
-export default connect(mapStateToProps)(HomeScreen);
+export default connect(mapStateToProps, actions)(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {

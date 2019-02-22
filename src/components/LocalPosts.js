@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList, View, SafeAreaView} from 'react-native';
 import { connect } from 'react-redux';
 import SinglePost from './SinglePost';
 import Colors from '../../constants/Colors';
@@ -25,14 +25,14 @@ class LocalPosts extends Component {
 
   render(){    
     return(
-      <View>
-      <FlatList
-        data={this.props.localDataSource}
-        renderItem={this._renderItem}
-        keyExtractor={post => post.id.toString()}
-        contentContainerStyle={{backgroundColor:'#e3f2fd'}}
-      />
-      </View>
+      <SafeAreaView style={{flex:1, backgroundColor:Colors.mainBg}}>
+        <FlatList
+          data={this.props.localDataSource}
+          renderItem={this._renderItem}
+          keyExtractor={post => post.id.toString()}
+          contentContainerStyle={{backgroundColor:'#e3f2fd'}}
+        />
+      </SafeAreaView>
     )
   }
 }
