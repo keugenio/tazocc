@@ -1,4 +1,4 @@
-import { UPDATE_POST_COUNT, UPDATE_POST_IDS} from '../actions/types';
+import { UPDATE_NEWPOST_COUNT, UPDATE_NEWPOST_IDS, SET_NEWPOST_COUNT,SET_NEWPOST_IDS} from '../actions/types';
 
 const INTIAL_STATE = { 
     postCount: 5, 
@@ -8,9 +8,13 @@ const INTIAL_STATE = {
 export default (state = INTIAL_STATE, action) => {
 
     switch(action.type){
-        case UPDATE_POST_COUNT:
+        case SET_NEWPOST_COUNT:
             return {...state, postCount: action.payload }; 
-        case UPDATE_POST_IDS:
+        case SET_NEWPOST_IDS:
+            return {...state, postIDs: action.payload };         
+        case UPDATE_NEWPOST_COUNT:
+            return {...state, postCount: action.payload }; 
+        case UPDATE_NEWPOST_IDS:
             return {...state, postIDs: action.payload }; 
         default:
             return state;
