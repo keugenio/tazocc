@@ -132,7 +132,7 @@ class SinglePost extends Component {
   }
   render(){
     
-    const { id, title, content} = this.props.post.item;
+    const { id, title, content, date} = this.props.post.item;
     return (
       <SafeAreaView style={{flex:1, backgroundColor:Colors.mainBg}}>
         <View>
@@ -148,7 +148,7 @@ class SinglePost extends Component {
               </View>
               <View style={{flex:1, alignItems:'flex-end', flexDirection:'row', justifyContent:'flex-end'}}>
                 <Text style={[this._titleBarTextStyle(), {textAlign:'right'}]}>
-                  {moment(this.props.postDate).format("MMM D")}
+                  {moment(date).format("MMM D")}
                 </Text>  
                 {this._isNewPost()}                        
               </View>              
