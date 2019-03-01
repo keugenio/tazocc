@@ -1,21 +1,13 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Dimesions } from 'react-native';
+import {View, Text , Dimensions, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
-import FontSize from '../constants/FontSize';
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+//import FontSize from '../constants/FontSize';
+import { Agenda } from 'react-native-calendars';
 import request from 'superagent'
 import moment, { version } from 'moment';
 import gapiInfo from '../apiGoogleConfig.json';
 
-class Events extends Component{
-  render(){
-    const {container, p} = styles;
-    return(
-      <View style={container}><Text style={p}>Events</Text></View>
-    )
-  }
-}
-export default Events
+const {height, width} = Dimensions.get("screen");
 
 // get google API auth values
 const CALENDAR_ID = gapiInfo.CALENDAR_ID;
@@ -34,13 +26,8 @@ export default class Events extends Component{
     constructor(props) {
       super(props);
       this.state = {
-        items:{
-          '2019-02-22': [{summary: 'item 1 - any js object'}],
-          '2019-02-23': [{summary: 'item 2 - any js object'}],
-          '2019-02-24': [],
-          '2019-02-25': [{summary: 'item 3 - any js object'},{summary: 'any js object'}],
-       },
-       allCalEvents: {}
+        items:{},
+        allCalEvents: {}
       };
     }
 
@@ -73,6 +60,7 @@ export default class Events extends Component{
               })
             }
           })
+          console.log("ace", allCalEvents);
           
           this.setState({allCalEvents: allCalEvents})          
         }
@@ -112,30 +100,26 @@ export default class Events extends Component{
       
       const calEvents = [];
       setTimeout(() => {
-        for (let i = -30; i < 70; i++) {
+        for (let i = -30; i < 30; i++) {
           const time = day.timestamp + i * 24 * 60 * 60 * 1000;
           const strDate = this.timeToString(time);
           // add blank info for days with no current data.
           if (!this.state.items[strDate]) {
             this.state.items[strDate] = [];
           }
+          // find matching events from all of the events pulled and set to state.items which is used populate the Agenda Component
           let obj = this.state.allCalEvents.find(event => event.startDate == strDate);
           if (obj)
-            calEvents.push(obj)
+            calEvents.push(obj)          
         }
 
-        //console.log("calEvents", calEvents);
+        
+        // state.items now have blank and calendar objects to populate the Agenda component
         calEvents.map((event)=> {
           this.state.items[event.startDate] = [{summary:event.summary}]
         })
+        console.log("items", this.state.items);
 
-        console.log("state.items", this.state.items);
-        
-        const newItems = {};
-        Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
-        this.setState({
-          items: newItems
-        });
       }, 1000);
 
     }
@@ -161,4 +145,19 @@ export default class Events extends Component{
       return date.toISOString().split('T')[0];
     }
   }
-})
+
+  const styles = StyleSheet.create({
+    item: {
+      backgroundColor: '#fff9c4',
+      flex: 1,
+      borderRadius: 5,
+      padding: 10,
+      marginRight: 10,
+      marginTop: 17
+    },
+    emptyDate: {
+      height: 15,
+      flex:1,
+      paddingTop: 30
+    }
+  });
