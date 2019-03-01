@@ -5,12 +5,22 @@ import FontSize from '../constants/FontSize';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import request from 'superagent'
 import moment, { version } from 'moment';
+import gapiInfo from '../apiGoogleConfig.json';
 
 let { height,width } = Dimensions.get('window')
 
-const CALENDAR_ID = 'teamazoutrigger@gmail.com'
-const API_KEY = 'AIzaSyAaSI4_tgkpYn0PLVDYGR90gh68fTMdmSQ'
-let url = `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?key=${API_KEY}`
+// get google API auth values
+const CALENDAR_ID = gapiInfo.CALENDAR_ID;
+const API_KEY = gapiInfo.API_KEY
+
+// set parameters for calendar search
+const prevYear = moment().subtract(1, 'year').format('YYYY') + "-01-01";
+const endOfYear = moment().format('YYYY') + "-12-31";
+const timeMin =  moment(prevYear).format();
+const timeMax = moment(endOfYear).format();
+
+// url for GET statement to google Calendar API
+let url = `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?maxResults=2500&orderBy=updated&singleEvents=true&timeMin=${timeMin}&timeMax=${timeMax}&key=${API_KEY}`;
 
 export default class Events extends Component{   
     constructor(props) {
@@ -21,29 +31,42 @@ export default class Events extends Component{
           '2019-02-23': [{summary: 'item 2 - any js object'}],
           '2019-02-24': [],
           '2019-02-25': [{summary: 'item 3 - any js object'},{summary: 'any js object'}],
-       }
+       },
+       allCalEvents: {}
       };
     }
 
-
-    componentDidMount(){
+    componentDidMount(){        
+      // load calendar events from TAZ calendar using Google Calendar API REST into state
       request
       .get(url)
       .end((err, resp) => {
         if (!err) {
-          const events = []
-          JSON.parse(resp.text).items.map((event) => {
-            if (event.start && event.end){
-              events.push({
-                start: moment(event.start.date).format("YYYY-MM-DD") || moment(event.start.dateTime).format("YYYY-MM-DD"),
-                end: event.end.date || event.end.dateTime,
-                title: event.summary,
-                id: event.id
+          // build allCalEvents array from downloaded Google Calendare and format start and end dates
+          const allCalEvents = [];
+          JSON.parse(resp.text).items.forEach((event) => {
+            if (event.start && event.end) {
+              event.start.date ? 
+              allCalEvents.push({
+                id:event.id, 
+                startDate:moment(event.start.date).format("YYYY-MM-DD"),
+                endDate:moment(event.end.date).format("YYYY-MM-DD"),
+                startTime:moment(event.start.date).format("h:mm:ss a"),
+                summary: event.summary,
+                recurringEventId:event.recurringEventId
+              }) : 
+              allCalEvents.push({
+                id:event.id, 
+                startDate:moment(event.start.dateTime).format("YYYY-MM-DD"),
+                endDate:moment(event.end.dateTime).format("YYYY-MM-DD"),
+                startTime:moment(event.start.dateTime).format("h:mm a"),
+                summary: event.summary,
+                recurringEventId:event.recurringEventId
               })
             }
           })
-          console.log(events['2019-02-26']);
           
+          this.setState({allCalEvents: allCalEvents})          
         }
       })
     }
@@ -78,16 +101,28 @@ export default class Events extends Component{
   
 
     loadItems(day) {
-      console.log(day);
       
+      const calEvents = [];
       setTimeout(() => {
         for (let i = -30; i < 70; i++) {
           const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-          const strTime = this.timeToString(time);
-          if (!this.state.items[strTime]) {
-            this.state.items[strTime] = [];
+          const strDate = this.timeToString(time);
+          // add blank info for days with no current data.
+          if (!this.state.items[strDate]) {
+            this.state.items[strDate] = [];
           }
+          let obj = this.state.allCalEvents.find(event => event.startDate == strDate);
+          if (obj)
+            calEvents.push(obj)
         }
+
+        //console.log("calEvents", calEvents);
+        calEvents.map((event)=> {
+          this.state.items[event.startDate] = [{summary:event.summary}]
+        })
+
+        console.log("state.items", this.state.items);
+        
         const newItems = {};
         Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
         this.setState({

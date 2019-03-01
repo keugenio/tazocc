@@ -8,7 +8,6 @@ import Login from '../screens/LoginScreen';
 import News from '../screens/News';
 import Colors from '../constants/Colors';
 import {AddButton} from '../src/components/AddButton';
-import TestRedux from '../TestRedux';
 
 
 const HomeStack = createStackNavigator({
