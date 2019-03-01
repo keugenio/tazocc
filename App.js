@@ -76,7 +76,7 @@ export default class App extends React.Component {
               AsyncStorage.setItem('localIDs', JSON.stringify(localIDArr));
               AsyncStorage.setItem('newPostIDs', JSON.stringify(localIDArr));
               AsyncStorage.setItem('newPostCount', localIDArr.length.toString());
-              AsyncStorage.setItem('localDataSource', JSON.stringify(downloadedPosts));
+              AsyncStorage.setItem('localDataStorage', JSON.stringify(downloadedPosts));
           }
         })
         

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Dimensions } from 'react-native';
+import {View, Text, StyleSheet, Dimesions } from 'react-native';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
@@ -7,7 +7,15 @@ import request from 'superagent'
 import moment, { version } from 'moment';
 import gapiInfo from '../apiGoogleConfig.json';
 
-let { height,width } = Dimensions.get('window')
+class Events extends Component{
+  render(){
+    const {container, p} = styles;
+    return(
+      <View style={container}><Text style={p}>Events</Text></View>
+    )
+  }
+}
+export default Events
 
 // get google API auth values
 const CALENDAR_ID = gapiInfo.CALENDAR_ID;
@@ -153,19 +161,4 @@ export default class Events extends Component{
       return date.toISOString().split('T')[0];
     }
   }
-  
-  const styles = StyleSheet.create({
-    item: {
-      backgroundColor: '#fff9c4',
-      flex: 1,
-      borderRadius: 5,
-      padding: 10,
-      marginRight: 10,
-      marginTop: 17
-    },
-    emptyDate: {
-      height: 15,
-      flex:1,
-      paddingTop: 30
-    }
-  });
+})

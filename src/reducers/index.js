@@ -5,6 +5,6 @@ import SelectPostIDReducer from './SelectPostReducer';
 
 export default combineReducers({
   newPosts: NewPostsReducer,
-  localPosts: LocalDataSourceReducer,
+  localDataSource: LocalDataSourceReducer,
   selectedPostID: SelectPostIDReducer,
 })

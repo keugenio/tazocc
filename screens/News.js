@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, SafeAreaView, StyleSheet, AsyncStorage} from 'react-native';
+import {View, SafeAreaView, StyleSheet} from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../src/actions';
 
@@ -30,10 +30,6 @@ class News extends React.Component {
     if (index>=0){      
       this.props.UpdateNewPostIDs(newPostIDs, id);
       this.props.UpdateNewPostCount(newPostsCount);
-      AsyncStorage.setItem('newPostCount', (newPostsCount-1).toString());
-      AsyncStorage.setItem('newPostIDs', JSON.stringify(newPostIDs));
-      //console.log("news",newPostIDs);
-      
     }
   }
   render() {    
