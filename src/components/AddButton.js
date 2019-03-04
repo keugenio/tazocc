@@ -32,7 +32,6 @@ class AddButton extends Component {
         this.toggleView();
     }
     _getScreen(){
-        
         switch(this.state.activeScreen){
             case 'practices':
                 return <Practices />;
@@ -128,6 +127,7 @@ class AddButton extends Component {
             <View style={{
                 position: 'absolute',
                 alignItems: 'center',
+                backgroundColor:Colors.mainBg
             }}>
                 <Animated.View style={{
                     position: 'absolute',
@@ -306,7 +306,7 @@ class AddButton extends Component {
                 </TouchableHighlight>
                 <Modal
                     animationType="slide"
-                    transparent={false}
+                    transparent={true}
                     visible={this.state.modalVisible}
                     
                     onRequestClose={() => {

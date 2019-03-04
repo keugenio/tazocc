@@ -1,6 +1,6 @@
 import { UPDATE_LOCAL_DATASOURCE, UPDATE_LOCAL_POSTIDS } from '../actions/types';
 
-export const UpdateLocalDataSource = (updatedDataSource) =>{
+export const UpdateLocalDataSource = (updatedDataSource) =>{  
   return {
     type:UPDATE_LOCAL_DATASOURCE,
     payload: updatedDataSource

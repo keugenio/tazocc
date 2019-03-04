@@ -54,12 +54,9 @@ export default class Events extends Component{
       
     }
     setMarkedDates(month){      
-      const fourMonthsBack = -30*4;
+      const fourMonthsBack = -30*4; // 4 months of 30 days
       const fourMonthsAhead = 30*4;
       const markedDates = {};
-
-      const board = {key:'board', color: 'red', selectedDotColor: 'blue'};
-      const event = {key:'event', color: 'blue', selectedDotColor: 'blue'};
 
       // loop through all days 4 months back and 4 months forward, if there's an event, then mark the date
       for (let i = fourMonthsBack; i < fourMonthsAhead; i++) {
@@ -82,7 +79,7 @@ export default class Events extends Component{
             markedDates[aMarkedDate.startDate] = {
               marked: false,
               selected: true, 
-              selectedColor: '#dce775'              
+              selectedColor: '#9e9d24'             
             };          
         }
       }

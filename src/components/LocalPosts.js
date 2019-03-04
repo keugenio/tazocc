@@ -8,11 +8,10 @@ class LocalPosts extends Component {
   constructor(props){
     super(props);
     this._renderItem = this._renderItem.bind(this);
+    this.localDataSource = {}
   }
 
   _renderItem = function (post){    
-
-    
     const {newPostIDs}= this.props.newPosts;
     const { id } = post.item
     
@@ -23,7 +22,8 @@ class LocalPosts extends Component {
     return <SinglePost post = {post} textStyle={{color:Colors.primary}} onPress={this.props.onPress} aNewPost={aNewPost}/>
   }
 
-  render(){    
+  render(){
+                
     return(
       <SafeAreaView style={{flex:1, backgroundColor:Colors.mainBg}}>
         <FlatList
@@ -36,9 +36,10 @@ class LocalPosts extends Component {
     )
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = state => {  
+  
   return {
-    localDataSource: state.localDataSource
+    localDataSource: state.localDataSource.localDataSource || null
   }
 }
 export default connect(mapStateToProps)(LocalPosts);

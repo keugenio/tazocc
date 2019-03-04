@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, SafeAreaView, StyleSheet} from 'react-native';
+import {View, SafeAreaView, StyleSheet, AsyncStorage} from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../src/actions';
 
@@ -12,7 +12,12 @@ class News extends React.Component {
   constructor(props){
     super(props)
     this._handleOnPress=this._handleOnPress.bind(this);
-
+    
+    if (this.props.localDataSource.length<=0) {      
+      AsyncStorage.getItem('localDataStorage').then((results) => {
+        this.props.UpdateLocalDataSource(JSON.parse(results))
+      })
+    }
   }
   static navigationOptions = {
     title: 'TAZ News and Messages',
@@ -24,6 +29,7 @@ class News extends React.Component {
       fontWeight: 'bold',
     },
   };
+
   _handleOnPress(id){
     const {newPostsCount, newPostIDs} = this.props.newPosts;
     const index = newPostIDs.indexOf(id);
@@ -43,8 +49,9 @@ class News extends React.Component {
     )
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state) => {  
   return {
+    localDataSource :state.localDataSource.localDataSource,
     newPosts:{
       newPostsCount: state.newPosts.postCount,
       newPostIDs: state.newPosts.postIDs
