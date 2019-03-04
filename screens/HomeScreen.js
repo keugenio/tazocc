@@ -9,7 +9,16 @@ import * as actions from '../src/actions'
 const {width, height} = Dimensions.get('window');
 
 class HomeScreen extends React.Component {
-
+  static navigationOptions = {
+    title: 'Team Arizona Outrigger Canoe Club',
+    headerStyle: {
+      backgroundColor: Colors.mainBg,
+    },
+    headerTintColor: '#FFF',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  }; 
   _clearOnePost() {
     AsyncStorage.getItem('localDataStorage').then((results) =>{
 
@@ -64,6 +73,13 @@ class HomeScreen extends React.Component {
       else
         console.log('localDS empty');
     });  
+    AsyncStorage.getItem('localCalEvents').then((results) =>{
+      if (results){
+        console.log("localCalEvents", JSON.parse(results));
+      }
+      else
+        console.log('localCalEvents empty');
+    });      
 
   }
   _getUnreadPosts(){

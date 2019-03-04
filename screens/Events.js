@@ -1,149 +1,175 @@
 import React, {Component} from 'react';
-import {View, Text , Dimensions, StyleSheet} from 'react-native';
+import {View, Dimensions, StyleSheet, AsyncStorage} from 'react-native';
+import { Text } from 'react-native-elements';
 import Colors from '../constants/Colors';
-//import FontSize from '../constants/FontSize';
-import { Agenda } from 'react-native-calendars';
-import request from 'superagent'
-import moment, { version } from 'moment';
-import gapiInfo from '../apiGoogleConfig.json';
+import { CalendarList } from 'react-native-calendars';
+import moment from 'moment';
+import FontSize from '../constants/FontSize';
 
 const {height, width} = Dimensions.get("screen");
 
-// get google API auth values
-const CALENDAR_ID = gapiInfo.CALENDAR_ID;
-const API_KEY = gapiInfo.API_KEY
-
-// set parameters for calendar search
-const prevYear = moment().subtract(1, 'year').format('YYYY') + "-01-01";
-const endOfYear = moment().format('YYYY') + "-12-31";
-const timeMin =  moment(prevYear).format();
-const timeMax = moment(endOfYear).format();
-
-// url for GET statement to google Calendar API
-let url = `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?maxResults=2500&orderBy=updated&singleEvents=true&timeMin=${timeMin}&timeMax=${timeMax}&key=${API_KEY}`;
+const low = moment().subtract(3, 'months').format("YYYY-MM-DD");
+const high = moment().add(3, 'months').format("YYYY-MM-DD");
 
 export default class Events extends Component{   
     constructor(props) {
       super(props);
       this.state = {
         items:{},
-        allCalEvents: {}
+        allCalEvents: {},
+        currentClickedEvent:{startDate:moment().format('YYYY-MM-DD'), summary:'select a day to view', startTime:''},
+        markedDates: null,
+        current: {low:low, high:high}
       };
     }
+    async componentDidMount(){
+      await AsyncStorage.getItem('allCalEvents', (err, result) => {
+        this.setState({allCalEvents: JSON.parse(result)})
+      });      
+    }   
 
-    componentDidMount(){        
-      // load calendar events from TAZ calendar using Google Calendar API REST into state
-      request
-      .get(url)
-      .end((err, resp) => {
-        if (!err) {
-          // build allCalEvents array from downloaded Google Calendare and format start and end dates
-          const allCalEvents = [];
-          JSON.parse(resp.text).items.forEach((event) => {
-            if (event.start && event.end) {
-              event.start.date ? 
-              allCalEvents.push({
-                id:event.id, 
-                startDate:moment(event.start.date).format("YYYY-MM-DD"),
-                endDate:moment(event.end.date).format("YYYY-MM-DD"),
-                startTime:moment(event.start.date).format("h:mm:ss a"),
-                summary: event.summary,
-                recurringEventId:event.recurringEventId
-              }) : 
-              allCalEvents.push({
-                id:event.id, 
-                startDate:moment(event.start.dateTime).format("YYYY-MM-DD"),
-                endDate:moment(event.end.dateTime).format("YYYY-MM-DD"),
-                startTime:moment(event.start.dateTime).format("h:mm a"),
-                summary: event.summary,
-                recurringEventId:event.recurringEventId
-              })
-            }
-          })
-          console.log("ace", allCalEvents);
-          
-          this.setState({allCalEvents: allCalEvents})          
-        }
-      })
+    _handleOnDayPress(day) {
+      const selectedDay = this.state.allCalEvents.find(event => event.startDate == day.dateString)
+      if (selectedDay){
+        this.setState({currentClickedEvent:selectedDay})        
+      } else {
+        this.setState({currentClickedEvent: {startDate:moment(day.dateString).format('YYYY-MM-DD'), summary:'', startTime:''}})
+      }
     }
 
-    render() {
+    _handleMonthChanged(month){     
       
-      return (
-        <View style={{height}}>
-          <Agenda
-            items={this.state.items}
-            loadItemsForMonth={this.loadItems.bind(this)}
-            selected={Date()}
-
-            renderItem={this.renderItem.bind(this)}
-            renderEmptyDate={this.renderEmptyDate.bind(this)}
-            rowHasChanged={this.rowHasChanged.bind(this)}
-            markingType={'period'}
-            markedDates={{
-              '2019-02-14': {startingDay: true, endingDay: true, color: 'blue'},
-              '2019-02-21': {startingDay: true, color: 'blue'},
-              '2019-02-22': {endingDay: true, color: 'gray'},
-              '2019-02-24': {startingDay: true, color: 'gray'},
-              '2019-02-25': {color: 'gray'},
-              '2019-02-26': {endingDay: true, color: 'gray'}}}
-            monthFormat={'MMM yyyy'}
-            theme={{calendarBackground: Colors.mainBg, agendaKnobColor: 'green', dayTextColor: '#e3f2fd',monthTextColor: '#ffee58'}}
-            renderDay={(day, item) => (<Text>{day ? day.month + "/" +  day.day: null}</Text>)}
-          />
-        </View>
-      );
-    }
-  
-
-    loadItems(day) {
-      
-      const calEvents = [];
-      setTimeout(() => {
-        for (let i = -30; i < 30; i++) {
-          const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-          const strDate = this.timeToString(time);
-          // add blank info for days with no current data.
-          if (!this.state.items[strDate]) {
-            this.state.items[strDate] = [];
-          }
-          // find matching events from all of the events pulled and set to state.items which is used populate the Agenda Component
-          let obj = this.state.allCalEvents.find(event => event.startDate == strDate);
-          if (obj)
-            calEvents.push(obj)          
+      if (!this.state.markedDates){
+        this.setMarkedDates(month)
+      } else {
+        const lowTimeStamp = moment(this.state.current.low).unix();
+        const highTimeStamp = moment(this.state.current.high).unix();
+        if (month[0].timestamp/1000 <= lowTimeStamp || month[0].timestamp/1000 >= highTimeStamp) {
+          this.setState({current: {low:moment(month[0].dateString).subtract(3, "months").format("YYYY-MM-DD"), high:moment(month[0].dateString).add(3, "months").format("YYYY-MM-DD")}});       const high  = this.state.current.high;
+          this.setMarkedDates(month);
         }
 
-        
-        // state.items now have blank and calendar objects to populate the Agenda component
-        calEvents.map((event)=> {
-          this.state.items[event.startDate] = [{summary:event.summary}]
-        })
-        console.log("items", this.state.items);
+      }
 
-      }, 1000);
+      
+    }
+    setMarkedDates(month){      
+      const fourMonthsBack = -30*4;
+      const fourMonthsAhead = 30*4;
+      const markedDates = {};
 
-    }
-  
-    renderItem(item) {
-      return (
-        <View style={[styles.item, {height: item.height}]}><Text>{item.summary}</Text></View>
-      );
-    }
-  
-    renderEmptyDate() {
-      return (
-        <View style={styles.emptyDate}><Text>This is an empty date!</Text></View>
-      );
+      const board = {key:'board', color: 'red', selectedDotColor: 'blue'};
+      const event = {key:'event', color: 'blue', selectedDotColor: 'blue'};
+
+      // loop through all days 4 months back and 4 months forward, if there's an event, then mark the date
+      for (let i = fourMonthsBack; i < fourMonthsAhead; i++) {
+        const time = month[0].timestamp + i * 24 * 60 * 60 * 1000;
+        const strTime = this.timeToString(time);
+
+        const aMarkedDate = this.state.allCalEvents.find(event => event.startDate == strTime)
+        if (aMarkedDate){
+          if (aMarkedDate.summary.toUpperCase().includes('PRACTICE'))         
+            markedDates[aMarkedDate.startDate] = {
+              marked: true, dotColor: 'white'
+            };
+          else if (aMarkedDate.summary.toUpperCase().includes('BOARD'))
+            markedDates[aMarkedDate.startDate] = {
+              marked: false, 
+              selected: true, 
+              selectedColor: '#ffb74d',
+            };   
+          else 
+            markedDates[aMarkedDate.startDate] = {
+              marked: false,
+              selected: true, 
+              selectedColor: '#dce775'              
+            };          
+        }
+      }
+      this.setState({markedDates:markedDates})
     }
 
-    rowHasChanged(r1, r2) {
-      return r1.name !== r2.name;
-    }
-  
     timeToString(time) {
       const date = new Date(time);
       return date.toISOString().split('T')[0];
     }
+    render() {
+      
+      return (
+        <View style={{height, backgroundColor:Colors.mainBg}}>
+          <View style={{flex:4}}>
+            <CalendarList
+              // Initially visible month. Default = Date()
+              current={this.state.current}
+              // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
+              minDate={'2017-05-10'}
+              // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
+              maxDate={'2020-05-30'}
+              // Handler which gets executed on day press. Default = undefined
+              onDayPress={(day) => {this._handleOnDayPress(day)}}
+              // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
+              monthFormat={'MMM yyyy'}
+              // Handler which gets executed when visible month changes in calendar. Default = undefined
+              onVisibleMonthsChange={(month) => {this._handleMonthChanged(month)}}
+              // Hide month navigation arrows. Default = false
+              hideArrows={true}
+              // Replace default arrows with custom ones (direction can be 'left' or 'right')
+              renderArrow={(direction) => (<Arrow />)}
+              // Do not show days of other months in month page. Default = false
+              hideExtraDays={true}
+              // If hideArrows=false and hideExtraDays=false do not switch month when tapping on greyed out
+              // day from another month that is visible in calendar page. Default = false
+              disableMonthChange={true}
+              // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday.
+              firstDay={0}
+              // Hide day names. Default = false
+              hideDayNames={false}
+              // Show week numbers to the left. Default = false
+              markedDates={this.state.markedDates}
+              style={{
+                borderWidth: 1,
+                borderColor: 'gray',
+                height: height*.75
+              }}
+              // Specify theme properties to override specific styles for calendar parts. Default = {}
+              theme={{
+                backgroundColor: Colors.mainBg,
+                calendarBackground: Colors.mainBg,
+                textSectionTitleColor: '#b6c1cd',
+                selectedDayBackgroundColor: '#00adf5',
+                selectedDayTextColor: Colors.success,
+                todayTextColor: Colors.warning,
+                dayTextColor: Colors.info,
+                textDisabledColor: '#d9e1e8',
+                dotColor: '#00adf5',
+                selectedDotColor: '#ffffff',
+                arrowColor: 'orange',
+                monthTextColor: '#ffe57f',
+                textDayFontFamily: 'Raleway',
+                textMonthFontFamily: 'Raleway',
+                textDayHeaderFontFamily: 'Raleway',
+                textDayFontSize: FontSize.FONTSIZE,
+                textMonthFontSize: FontSize.FONTSIZE+5,
+                textDayHeaderFontSize: FontSize.FONTSIZE-3
+              }}            
+            />        
+          </View>
+          <View style={{flex:1, backgroundColor:'rgba(255,255,255,.5)'}}>
+              <View style={{flexDirection:'row', borderWidth:2, borderColor:Colors.mainBg, padding:5, backgroundColor:'rgb(255,255,255)'}}>
+                <View style={{flexDirection:'column', padding:5}}>
+                  <Text h5 style={{textAlign:'center', fontWeight:'400'}}>{moment(this.state.currentClickedEvent.startDate).format("dddd")}</Text>
+                  <Text h5 style={{textAlign:'center', fontWeight:'800'}}>{moment(this.state.currentClickedEvent.startDate).format("MMMM Do")}</Text>
+                  <Text h5 style={{textAlign:'center', fontWeight:'600'}}>{this.state.currentClickedEvent.startTime}</Text>
+                </View>
+                <View style={{flexDirection:'column', borderLeftWidth:1, borderLeftColor: Colors.mainBg, justifyContent:'center', padding:5, paddingLeft:10, width:width*.75}}>
+                  <Text style={{flexWrap:'wrap', fontWeight:'200'}} h4>{this.state.currentClickedEvent.summary}</Text>
+                </View>
+              </View>
+          </View>
+
+        </View>
+      );
+    }  
   }
 
   const styles = StyleSheet.create({
@@ -154,10 +180,5 @@ export default class Events extends Component{
       padding: 10,
       marginRight: 10,
       marginTop: 17
-    },
-    emptyDate: {
-      height: 15,
-      flex:1,
-      paddingTop: 30
     }
   });
