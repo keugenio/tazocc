@@ -4,11 +4,10 @@ import { createStackNavigator, createBottomTabNavigator} from 'react-navigation'
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import EmailScreen from '../screens/EmailScreen';
-import Login from '../screens/LoginScreen';
+import Practices from '../screens/Practices';
 import News from '../screens/News';
 import Colors from '../constants/Colors';
 import {AddButton} from '../src/components/AddButton';
-
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -56,17 +55,16 @@ NewsStack.navigationOptions = {
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios' ? 'ios-notifications' : 'md-notifications'}
-      onPress={this._hello}
     />  
   ), 
 };
 
-const AuthStack = createStackNavigator({
-  Settings: Login,
+const PracticesStack = createStackNavigator({
+  Settings: Practices,
 });
 
-AuthStack.navigationOptions = {
-  tabBarLabel: 'Login',
+PracticesStack.navigationOptions = {
+  tabBarLabel: 'Practices',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -88,7 +86,7 @@ export default createBottomTabNavigator(
         })
     },
     NewsStack,
-    AuthStack,
+    PracticesStack,
     },
 
   {tabBarOptions: {

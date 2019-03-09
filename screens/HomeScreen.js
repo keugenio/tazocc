@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image,ScrollView,StyleSheet,Text,View,Dimensions, ActivityIndicator, AsyncStorage, TouchableOpacity} from 'react-native';
+import {Image,ScrollView,StyleSheet,Text,View,Dimensions, AsyncStorage, TouchableOpacity} from 'react-native';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Philosophies from '../src/components/Philosophies';
@@ -18,7 +18,8 @@ class HomeScreen extends React.Component {
     headerTitleStyle: {
       fontWeight: 'bold',
     },
-  }; 
+  };
+
   _clearOnePost() {
     AsyncStorage.getItem('localDataStorage').then((results) =>{
 
@@ -43,79 +44,63 @@ class HomeScreen extends React.Component {
   _clearEverything(){
     AsyncStorage.clear();
   }
-  _showStorage() {
-
-     AsyncStorage.getItem('newPostCount').then((results) =>{
+  async _showStorage() {
+    console.log('**************************');
+    
+     await AsyncStorage.getItem('newPostCount').then((results) =>{
       if (results){
         console.log("newPostCount", results);
       }
       else
         console.log('newPostCount empty');
     });
-     AsyncStorage.getItem('newPostIDs').then((results) =>{
+     await AsyncStorage.getItem('newPostIDs').then((results) =>{
       if (results){
         console.log("newPostsIDs", JSON.parse(results));
       }
       else
         console.log('newPostsIDs empty');
-    });
-     AsyncStorage.getItem('localIDs').then((results) =>{
-      if (results){
-        console.log("localIDs", JSON.parse(results));
-      }
-      else
-        console.log('localIDs empty');
     }); 
-     AsyncStorage.getItem('localDataStorage').then((results) =>{
+     await AsyncStorage.getItem('localDataStorage').then((results) =>{
       if (results){
         console.log("localDataStorage", JSON.parse(results));
       }
       else
         console.log('localDS empty');
-    });  
-    AsyncStorage.getItem('localCalEvents').then((results) =>{
-      if (results){
-        console.log("localCalEvents", JSON.parse(results));
-      }
-      else
-        console.log('localCalEvents empty');
-    });      
+    });   
+    console.log('**************************');  
 
   }
-  _getUnreadPosts(){
-    switch (this.props.newPostCount) {
-      case (this.props.newPostCount>1):
-        return <Text>You have {this.props.newPostCount} unread posts: </Text>
-      case (this.props.newPostCount=1):
-        return <Text>You have 1 unread post </Text>
-      default:
-        break;
-    }
+  // for future releases for admin tools.
+  _showAdminTools(){
+    return (
+      <View>
+        <TouchableOpacity onPress={this._clearOnePost}>
+        <Text>clear post</Text>
+        </TouchableOpacity>   
+        <TouchableOpacity onPress={this._showStorage}>
+          <Text>show storage in console log</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this._clearEverything}>
+          <Text>clear everything</Text>
+        </TouchableOpacity>      
+      </View>
+    )    
   }
+
 
   render() {
     return (
       <View style={styles.container}>
 
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-
-          <TouchableOpacity onPress={this._clearOnePost}>
-            <Text>clear post</Text>
-          </TouchableOpacity>   
-          <TouchableOpacity onPress={this._showStorage}>
-            <Text>show storage in console log</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._clearEverything}>
-            <Text>clear everything</Text>
-          </TouchableOpacity>         
-
                
           <View style={styles.headerContainer}>
             <Image source={require('../src/images/header_copy.png')} style={styles.headerImageStyle}/>
           </View>
 
           <View style={styles.mainBodyContainer}>
-          
+
             <Image source={require('../src/images/adr2018.jpg')} style={styles.imageStyle}/>             
             
             <View style={{marginVertical:FontSize.FONTSIZE*2}}>
@@ -135,8 +120,10 @@ class HomeScreen extends React.Component {
     );
   }
 }
-mapStateToProps = (state) => {
+mapStateToProps = (state) => {  
   return {
+    newPosts: state.newPosts,
+    localDataSource: state.localDataSource,
     newPostCount: state.newPosts.postCount
   }
 }
@@ -161,9 +148,6 @@ const styles = StyleSheet.create({
   mainBodyContainer: {
     alignItems:'stretch',
     flex:1
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
   },
   mainBodyText: {
     fontSize: FontSize.FONTSIZE,

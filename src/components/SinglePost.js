@@ -29,7 +29,7 @@ class SinglePost extends Component {
   }
   _selectPostID(id){   
     this.props.SelectPostID(id);
-    this.props.onPress(id);
+    //this.props.onPress(id); <-used to send state change to the parent component
   }
   _cleanText = function (text) {
     var mapObj = {
@@ -120,18 +120,17 @@ class SinglePost extends Component {
       )
     }
   }
-  _isNewPost(){ 
-    if (this.props.aNewPost)
-      return (
-        <View style={{marginLeft: FontSize.FONTSIZE}}>
-          <Icon name="star" size={FontSize.FONTSIZE} color={'#FFFF00'}/>
-        </View>
-      )
-    else
-        return null
-  }
-  render(){
-    
+  // _isNewPost(){ 
+  //   if (this.props.aNewPost)
+  //     return (
+  //       <View style={{marginLeft: FontSize.FONTSIZE}}>
+  //         <Icon name="star" size={FontSize.FONTSIZE} color={'#FFFF00'}/>
+  //       </View>
+  //     )
+  //   else
+  //       return null
+  // }
+  render(){    
     const { id, title, content} = this.props.post.item;
     return (
       <SafeAreaView style={{flex:1, backgroundColor:Colors.mainBg}}>
@@ -148,9 +147,8 @@ class SinglePost extends Component {
               </View>
               <View style={{flex:1, alignItems:'flex-end', flexDirection:'row', justifyContent:'flex-end'}}>
                 <Text style={[this._titleBarTextStyle(), {textAlign:'right'}]}>
-                  {moment(this.props.postDate).format("MMM D")}
-                </Text>  
-                {this._isNewPost()}                        
+                  {moment(this.props.post.item.date).format("MMM D")}
+                </Text>                       
               </View>              
             </View>
             </CardSection>          

@@ -127,7 +127,7 @@ class AddButton extends Component {
             <View style={{
                 position: 'absolute',
                 alignItems: 'center',
-                backgroundColor:Colors.mainBg
+                backgroundColor:'rgba(0,0,0,0)'
             }}>
                 <Animated.View style={{
                     position: 'absolute',

@@ -15,17 +15,17 @@ class TabBarIcon extends React.Component {
     }
   }
 
-  _getBadge = function () {
-    if ((this.props.name == 'ios-notifications' || this.props.name == 'md-notifications') && this.props.newPostCount>0 && !this.state.isPressed)
-      return (
-        <Badge 
-          value={this.props.newPostCount}  
-          status="warning" 
-          containerStyle={{ position: 'absolute', top: -5, right: -15 }}
-          textStyle={{color:Colors.primary}}
-        />
-      )
-  }
+  // _getBadge = function () {
+  //   if ((this.props.name == 'ios-notifications' || this.props.name == 'md-notifications') && this.props.newPostCount>0 && !this.state.isPressed)
+  //     return (
+  //       <Badge 
+  //         value={this.props.newPostCount}  
+  //         status="warning" 
+  //         containerStyle={{ position: 'absolute', top: -5, right: -15 }}
+  //         textStyle={{color:Colors.primary}}
+  //       />
+  //     )
+  // }
   render() {
     return (
         <View>
@@ -35,7 +35,6 @@ class TabBarIcon extends React.Component {
               style={{ marginBottom: -3 }}
               color={this.props.focused ? Colors.tabIconSelected : Colors.tabIconDefault}
             />
-            {this._getBadge()}
         </View>
     );
   }

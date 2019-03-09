@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View, AsyncStorage} from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import reducers from './src/reducers';
 import request from 'superagent'
@@ -23,35 +23,93 @@ const timeMax = moment(endOfYear).format();
 // url for GET statement to google Calendar API
 let url = `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?maxResults=2500&orderBy=updated&singleEvents=true&timeMin=${timeMin}&timeMax=${timeMax}&key=${API_KEY}`;
 
-const initState = {};
 export default class App extends React.Component {
   constructor(){
     super();
     this.state = {
       isLoadingComplete: false,
-      previousPosts: false
     };
+  }
 
+  async componentDidMount(){
     try {
-      this._loadNews();
-      this._loadCalEvents();
-      
+      this.state.isLoadingComplete = false;
+      await this._loadNews()
+      await this._loadCalEvents()
+      this.isLoadingComplete=true;
     } catch (error) {
       console.log(error)
-    }    
+    }
   }
-
   async _loadNews(){
-    //download latest news articles from TAZOCC.com
     await fetch('http://www.tazocc.com//wp-json/wp/v2/posts')
     .then((response) => response.json())
-    .then((results) => {
-      AsyncStorage.setItem('localDataStorage', JSON.stringify(results));
-    });
-  }
+    .then((downloadedPosts) => {
+      this.setState({ isLoadingComplete: false});
+      AsyncStorage.getItem('localIDs').then((localIDs) =>{
+        
+        let localPostIDs=[];
+        let newPostIDs = [];
+        let newPosts = [];
+        let updatedLocalDataStorage = [];
+        
+        if (localIDs && localIDs.length>0){
+            localPostIDs = JSON.parse(localIDs);
+            
+            // for each new post, update the newPostIDs array as well as the newPosts array
+            downloadedPosts.forEach((downLoadedPost) =>{                
+              if (!localPostIDs.includes(downLoadedPost.id)){
+                newPostIDs.push(downLoadedPost.id);
+                newPosts.push(downLoadedPost);
+              }
+            })
+            
+            // get all the local posts and add any new post
+            AsyncStorage.getItem('localDataStorage').then((results)=>{
+              updatedLocalDataStorage = JSON.parse(results);
+              
+              newPosts.forEach((post) => {
+                updatedLocalDataStorage.push(post)
+              })
+              AsyncStorage.setItem('localDataStorage', JSON.stringify(updatedLocalDataStorage));
 
+              
+            });
+
+            // get all the unread IDs and combine them with the new posts
+            AsyncStorage.getItem('newPostIDs').then((results) => {
+              const unreadIDs = JSON.parse(results); 
+              unreadIDs.forEach((id)=>{
+                newPostIDs.push(id)
+              })
+              AsyncStorage.setItem('newPostIDs', JSON.stringify(newPostIDs));
+              AsyncStorage.setItem('newPostCount', newPostIDs.length.toString());                
+            })
+
+            // add IDs for any new post to the array that tracks IDs for all local posts
+            newPostIDs.forEach((newPostID) => {
+              localPostIDs.push(newPostID);               
+            })
+            
+            // update the local variables
+            AsyncStorage.setItem('localIDs', JSON.stringify(localPostIDs));
+
+        } else { 
+            // create an array of IDs for the downloaded posts. that represents the "new" and current IDs for the local posts
+            // update the the new post count and store the downloaded posts as local data storage
+            let localIDArr = [];
+            downloadedPosts.forEach(post =>{
+              localIDArr.push(post.id);
+            })
+            AsyncStorage.setItem('localIDs', JSON.stringify(localIDArr));
+            AsyncStorage.setItem('newPostIDs', JSON.stringify(localIDArr));
+            AsyncStorage.setItem('newPostCount', localIDArr.length.toString());
+            AsyncStorage.setItem('localDataStorage', JSON.stringify(downloadedPosts));
+        }
+      })
+    })
+  }
   async _loadCalEvents(){
-    // download latest calendar events from Google Calendar for TAZ
     try {
       request
         .get(url)

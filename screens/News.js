@@ -12,12 +12,11 @@ class News extends React.Component {
   constructor(props){
     super(props)
     this._handleOnPress=this._handleOnPress.bind(this);
-    
-    if (this.props.localDataSource.length<=0) {      
-      AsyncStorage.getItem('localDataStorage').then((results) => {
-        this.props.UpdateLocalDataSource(JSON.parse(results))
-      })
-    }
+
+    AsyncStorage.getItem('localDataStorage').then( (results)=> {
+      this.props.UpdateLocalDataSource(JSON.parse(results))
+      }
+    );
   }
   static navigationOptions = {
     title: 'TAZ News and Messages',
@@ -33,30 +32,33 @@ class News extends React.Component {
   _handleOnPress(id){
     const {newPostsCount, newPostIDs} = this.props.newPosts;
     const index = newPostIDs.indexOf(id);
+    
     if (index>=0){      
       this.props.UpdateNewPostIDs(newPostIDs, id);
       this.props.UpdateNewPostCount(newPostsCount);
     }
   }
+
   render() {    
+    
     return( 
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <LocalPosts onPress={this._handleOnPress} newPosts={this.props.newPosts}/>
+          <LocalPosts onPress={this._handleOnPress}  /> 
         </View>
       </SafeAreaView>
 
     )
   }
 }
-const mapStateToProps = (state) => {  
-  return {
-    localDataSource :state.localDataSource.localDataSource,
-    newPosts:{
-      newPostsCount: state.newPosts.postCount,
-      newPostIDs: state.newPosts.postIDs
+const mapStateToProps = (state) => {    
+    return {
+      localDataSource :state.localDataSource.localDataSource,
+      newPosts:{
+        newPostsCount: state.newPosts.postCount,
+        newPostIDs: state.newPosts.postIDs
+      }
     }
-  }
 }
 export default connect(mapStateToProps, actions)(News);
 

@@ -8,18 +8,22 @@ class LocalPosts extends Component {
   constructor(props){
     super(props);
     this._renderItem = this._renderItem.bind(this);
-    this.localDataSource = {}
+    
   }
 
   _renderItem = function (post){    
-    const {newPostIDs}= this.props.newPosts;
-    const { id } = post.item
+    //********************************** */
+    // work on this later. to setup unread posts.
+    // const {newPostIDs}= this.props.newPosts;
+    // const { id } = post.item
     
-    let aNewPost = false;
-    if (newPostIDs.includes(id))
-      aNewPost = true;
-
-    return <SinglePost post = {post} textStyle={{color:Colors.primary}} onPress={this.props.onPress} aNewPost={aNewPost}/>
+    // let aNewPost = false;
+    // if (newPostIDs.includes(id))
+    //   aNewPost = true;
+    
+    //  return <SinglePost post = {post} textStyle={{color:Colors.primary}} onPress={this.props.onPress}/>
+    //************************************* */
+  return <SinglePost post = {post} textStyle={{color:Colors.primary}}/>
   }
 
   render(){
@@ -36,8 +40,7 @@ class LocalPosts extends Component {
     )
   }
 }
-const mapStateToProps = state => {  
-  
+const mapStateToProps = state => {    
   return {
     localDataSource: state.localDataSource.localDataSource || null
   }

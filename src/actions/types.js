@@ -18,4 +18,7 @@ export const UPDATE_POST_IDS = 'update_post_ids';
 export const SELECT_POST = "select_post";
 export const UPDATE_LOCAL_DATASOURCE = "update_local_datasource";
 export const UPDATE_LOCAL_POSTIDS = "update_local_postids";
+export const SET_NEW_POST_COUNT = "set_new_post_count";
+export const SET_NEW_POST_IDS = "set_new_post_ids";
+
 

@@ -36,22 +36,86 @@ export default class App extends React.Component {
       this._loadNews();
       this._loadCalEvents();
       
+      
     } catch (error) {
       console.log(error)
     }    
   }
 
   async _loadNews(){
-    //download latest news articles from TAZOCC.com
+    let downloadedPosts = [];
+    let localPosts = [];
+    let newPostIDs = [];    
+
     await fetch('http://www.tazocc.com//wp-json/wp/v2/posts')
     .then((response) => response.json())
     .then((results) => {
-      AsyncStorage.setItem('localDataStorage', JSON.stringify(results));
+      downloadedPosts = results;
     });
-  }
+    await AsyncStorage.getItem('localDataStorage').then((localDS) =>{
+      localPosts = JSON.parse(localDS);
+    });
+    await AsyncStorage.getItem('newPostIDs').then((results)=>{
+      if (results)
+        newPostIDs = JSON.parse(results);
+    });
 
+    // if there are previous news items then update else set up local data storage and unread posts
+    if (localPosts && localPosts.length>0){
+      console.log("2nd time loading");
+      let newPosts = []; //container to hold any new posts
+
+      // create an array, localPostIDs, with post ids for comparing new to old posts
+      let localPostIDs=[];
+      localPosts.map((obj) => {
+        localPostIDs.push(obj.id)
+      });
+      console.log("App postIDs before", newPostIDs);
+      // for each new post, update the newPostIDs array as well as the newPosts array
+      downloadedPosts.forEach((downLoadedPost) =>{                        
+        if (!localPostIDs.includes(downLoadedPost.id)){
+          console.log("App ** post added", downLoadedPost.id);
+          newPostIDs.push(downLoadedPost.id);
+          newPosts.push(downLoadedPost);
+        }
+      })
+      console.log("App postIDs after", newPostIDs);
+      
+      // add new posts to local posts
+      newPosts.forEach((post) => {
+        localPosts.push(post)
+      })
+      
+
+      // get all the unread IDs and combine them with the new posts
+      // AsyncStorage.getItem('newPostIDs').then((results) => {
+      //   const unreadIDs = JSON.parse(results); 
+      //   unreadIDs.forEach((id)=>{
+      //     newPostIDs.push(id)
+      //   })                
+      // })
+
+      // update locally stored variables
+      AsyncStorage.setItem('localDataStorage', JSON.stringify(localPosts));
+      AsyncStorage.setItem('newPostIDs', JSON.stringify(newPostIDs));
+      AsyncStorage.setItem('newPostCount', newPostIDs.length.toString());          
+
+    } else { 
+      // dump all the data into local storage and setup unread posts and post count <-(for visual badge counters)
+      // create an array of "new" IDs for the downloaded posts that represents any unread local posts
+
+      downloadedPosts.map((obj) => {
+        newPostIDs.push(obj.id)
+      });
+      
+      
+      // update locally stored variables
+      AsyncStorage.setItem('newPostIDs', JSON.stringify(newPostIDs));
+      AsyncStorage.setItem('newPostCount', newPostIDs.length.toString());
+      AsyncStorage.setItem('localDataStorage', JSON.stringify(downloadedPosts));
+    }
+  }
   async _loadCalEvents(){
-    // download latest calendar events from Google Calendar for TAZ
     try {
       request
         .get(url)

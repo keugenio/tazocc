@@ -20,7 +20,7 @@ export default class Events extends Component{
         currentClickedEvent:{startDate:moment().format('YYYY-MM-DD'), summary:'select a day to view', startTime:''},
         markedDates: null,
         current: {low:low, high:high}
-      };
+      };      
     }
     async componentDidMount(){
       await AsyncStorage.getItem('allCalEvents', (err, result) => {
@@ -91,7 +91,6 @@ export default class Events extends Component{
       return date.toISOString().split('T')[0];
     }
     render() {
-      
       return (
         <View style={{height, backgroundColor:Colors.mainBg}}>
           <View style={{flex:4}}>
