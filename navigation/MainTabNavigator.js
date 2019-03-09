@@ -68,7 +68,7 @@ PracticesStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-log-in' : 'md-log-in'}
+      name={Platform.OS === 'ios' ? 'ios-star' : 'md-star'}
     />
   )
 };

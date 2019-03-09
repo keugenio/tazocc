@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Platform, Linking, ScrollView, ListView } from 'react-native';
+import {View, Text, StyleSheet, Platform, Linking, ScrollView, ListView , Image, Dimensions} from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Icon from '@expo/vector-icons/FontAwesome';
+
+const {height, width}=Dimensions.get('window');
 
 class Practices extends Component{
   static navigationOptions = {
@@ -57,6 +59,7 @@ class Practices extends Component{
     return(
       <View style={container}>
         <ScrollView>
+        <Image source={require('../src/images/practice_3.jpg')} style={styles.imageStyle}/>
         <View style={{marginHorizontal:FontSize*2}}>
           <View style={[lineSpacer, textLeft]}><Text style={[p, {textAlign:'center', fontSize:FontSize.FONTSIZE+5, fontWeight:'700'}]}>Team Arizona holds practices</Text></View>
           <View style={[lineSpacer]}><Text style={[p, {textAlign:'left'}]}>Tuesday Evenings 6:00pm  (Open Practice, Women and Men split)</Text></View>
@@ -90,7 +93,9 @@ class Practices extends Component{
                 to sign up for practices
               </Text>
           </Card> 
+
           </View>
+          <Image source={require('../src/images/oc1.jpg')} style={styles.imageStyle}/>          
         </View>
         </ScrollView>
       </View>
@@ -115,5 +120,12 @@ const styles = StyleSheet.create({
   },
   textLeft:{
     textAlign:'left'
-  }
+  },
+  imageStyle: {
+    height:.35*height,
+    width,
+    resizeMode:'contain',
+    marginTop:10,
+    marginBottom:10
+  },
 })

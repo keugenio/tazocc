@@ -94,28 +94,21 @@ class HomeScreen extends React.Component {
       <View style={styles.container}>
 
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-               
-          <View style={styles.headerContainer}>
+          <View style={styles.headerContainer}>  
             <Image source={require('../src/images/header_copy.png')} style={styles.headerImageStyle}/>
           </View>
-
           <View style={styles.mainBodyContainer}>
-
-            <Image source={require('../src/images/adr2018.jpg')} style={styles.imageStyle}/>             
-            
+            <Image source={require('../src/images/homescreen1.jpg')} style={styles.imageStyle}/> 
             <View style={{marginVertical:FontSize.FONTSIZE*2}}>
               <Text style={[styles.pHighlight,{color:'#FFFF00', fontSize:FontSize.FONTSIZE*3, fontFamily:'Broda', textAlign:'center'}]}>our Mission</Text>
               <Text style={styles.mainBodyText}>to promote the Hawaiian culture through competitive and recreational outrigger canoe paddling for youth (keikis), family (ohana), and the community.</Text>            
             </View>
-
-            <Image source={require('../src/images/trailing.jpg')} style={styles.imageStyle}/>  
-             
+            <Image source={require('../src/images/adr2018.jpg')} style={styles.imageStyle}/>
             <Philosophies />  
-           
-            <Image source={require('../src/images/auntyaloha.jpg')} style={[styles.imageStyle,{opacity:.75}]}/>             
+            <Image source={require('../src/images/christmas-2018.jpg')} style={styles.imageStyle}/> 
           </View>
-
         </ScrollView>  
+        
       </View>
     );
   }
@@ -142,8 +135,6 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
   },
   mainBodyContainer: {
     alignItems:'stretch',
@@ -159,7 +150,7 @@ const styles = StyleSheet.create({
   imageStyle: {
     height:.35*height,
     width,
-    resizeMode:'cover',
+    resizeMode:'contain',
     marginTop:10,
     marginBottom:10
   },

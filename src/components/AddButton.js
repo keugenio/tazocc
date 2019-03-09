@@ -79,15 +79,6 @@ class AddButton extends Component {
             outputRange: [0, -20]
         });
 
-        const fourthX = this.mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: [20, -80]
-        });
-        const fourthY = this.mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, -60]
-        });
-
         const fifthX = this.mode.interpolate({
             inputRange: [0, 1],
             outputRange: [20, -30]
@@ -108,11 +99,11 @@ class AddButton extends Component {
 
         const seventhX = this.mode.interpolate({
             inputRange: [0, 1],
-            outputRange: [20, 120]
+            outputRange: [0, 20]
         });
         const seventhY = this.mode.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, -60]
+            outputRange: [0, -120]
         });                
 
         const opacity = this.mode.interpolate({
@@ -129,27 +120,6 @@ class AddButton extends Component {
                 alignItems: 'center',
                 backgroundColor:'rgba(0,0,0,0)'
             }}>
-                <Animated.View style={{
-                    position: 'absolute',
-                    left: fourthX,
-                    top: fourthY,
-                    opacity
-                }}>
-                    <TouchableHighlight
-                        onPress={() => { this._openModal('practices')
-                        }}
-                        style={[shadow,{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: SIZE / 2,
-                            height: SIZE / 2,
-                            borderRadius: SIZE / 4,
-                            backgroundColor: '#48A2F8'
-                        }]}
-                    >
-                        <Image source={require('../images/paddling101.png')} style={{height:40, width:40, tintColor:'#F8F8F8'}}/>
-                    </TouchableHighlight>
-                </Animated.View> 
                 <Animated.View style={{
                     position: 'absolute',
                     left: fifthX,
