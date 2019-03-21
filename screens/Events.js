@@ -27,7 +27,19 @@ export default class Events extends Component{
         this.setState({allCalEvents: JSON.parse(result)})
       });      
     }   
-
+    static navigationOptions = {
+      title: 'TAZ Events',
+      headerStyle: {
+        backgroundColor: Colors.mainBg,
+      },
+      headerTintColor: '#FFF',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }
+    componentWillMount(){
+      this.props.navigation.openDrawer();
+    }
     _handleOnDayPress(day) {
       const selectedDay = this.state.allCalEvents.find(event => event.startDate == day.dateString)
       if (selectedDay){
@@ -36,7 +48,6 @@ export default class Events extends Component{
         this.setState({currentClickedEvent: {startDate:moment(day.dateString).format('YYYY-MM-DD'), summary:'', startTime:''}})
       }
     }
-
     _handleMonthChanged(month){     
       
       if (!this.state.markedDates){
@@ -90,10 +101,11 @@ export default class Events extends Component{
       const date = new Date(time);
       return date.toISOString().split('T')[0];
     }
+
     render() {
       return (
         <View style={{height, backgroundColor:Colors.mainBg}}>
-          <View style={{flex:4}}>
+          <View style={{flex:3}}>
             <CalendarList
               // Initially visible month. Default = Date()
               current={this.state.current}
@@ -150,7 +162,7 @@ export default class Events extends Component{
               }}            
             />        
           </View>
-          <View style={{flex:1, backgroundColor:'rgba(255,255,255,.5)'}}>
+          <View style={{flex:1, backgroundColor:'rgba(255,255,255,.5)', marginBottom:15}}>
               <View style={{flexDirection:'row', borderWidth:2, borderColor:Colors.mainBg, padding:5, backgroundColor:'rgb(255,255,255)'}}>
                 <View style={{flexDirection:'column', padding:5}}>
                   <Text h5 style={{textAlign:'center', fontWeight:'400'}}>{moment(this.state.currentClickedEvent.startDate).format("dddd")}</Text>
@@ -162,7 +174,6 @@ export default class Events extends Component{
                 </View>
               </View>
           </View>
-
         </View>
       );
     }  

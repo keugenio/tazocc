@@ -2,30 +2,30 @@ import React from 'react';
 import  {View, TouchableWithoutFeedback} from 'react-native';
 import {Badge} from 'react-native-elements';
 import { connect } from 'react-redux';
+import * as actions from '../src/actions';
 import { Icon } from 'expo';
-import * as Actions from '../src/actions';
 
 import Colors from '../constants/Colors';
 
 class TabBarIcon extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isPressed:false
+  _getBadge = function () {
+    const unReadItemsLength = this.props.newPosts.IDs ? this.props.newPosts.IDs.length : 10;
+
+    console.log(("unreadItems", unReadItemsLength));
+    
+    if ( ((this.props.name == 'ios-notifications' || this.props.name == 'md-notifications')) && unReadItemsLength > 0 )
+    {      
+      return (
+        <Badge 
+          value={unReadItemsLength}  
+          status="warning" 
+          containerStyle={{ position: 'absolute', top: -5, right: -15 }}
+          textStyle={{color:Colors.mainBg}}
+        />
+      )
     }
   }
 
-  // _getBadge = function () {
-  //   if ((this.props.name == 'ios-notifications' || this.props.name == 'md-notifications') && this.props.newPostCount>0 && !this.state.isPressed)
-  //     return (
-  //       <Badge 
-  //         value={this.props.newPostCount}  
-  //         status="warning" 
-  //         containerStyle={{ position: 'absolute', top: -5, right: -15 }}
-  //         textStyle={{color:Colors.primary}}
-  //       />
-  //     )
-  // }
   render() {
     return (
         <View>
@@ -35,16 +35,18 @@ class TabBarIcon extends React.Component {
               style={{ marginBottom: -3 }}
               color={this.props.focused ? Colors.tabIconSelected : Colors.tabIconDefault}
             />
+            {this._getBadge()}
         </View>
     );
   }
 }
-const mapStateToProps = (state) =>{
-  const {postCount} = state.newPosts;
-  
+
+const mapStateToProps = (state) => {        
   return {
-    newPostCount: postCount, 
-  };
+    newPosts:{
+      IDs: state.newPosts.IDs
+    }
+  }
 }
 
-export default connect(mapStateToProps, Actions)(TabBarIcon)
+export default connect(mapStateToProps)(TabBarIcon)

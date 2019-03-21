@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Animated, TouchableHighlight, View, Text, Image, Modal, StyleSheet} from "react-native";
+import {Animated, TouchableHighlight, TouchableOpacity, View, Text, Image, Modal, StyleSheet} from "react-native";
 import Icon from '@expo/vector-icons/FontAwesome';
 import {WebBrowser} from 'expo';
 import Colors from '../../constants/Colors';
@@ -26,7 +26,8 @@ class AddButton extends Component {
             duration: 300
         }).start();
     };
-    _openModal(activeScreen){
+
+    _openModal = (activeScreen) => {
         this.setState({activeScreen})
         this.setModalVisible(true);
         this.toggleView();
@@ -115,39 +116,47 @@ class AddButton extends Component {
             outputRange: ['0deg', '45deg']
         });
         return (
-            <View style={{
-                position: 'absolute',
-                alignItems: 'center',
-                backgroundColor:'rgba(0,0,0,0)'
-            }}>
-                <Animated.View style={{
-                    position: 'absolute',
-                    left: fifthX,
-                    top: fifthY,
-                    opacity
-                }}>
+            <View style={{position: 'absolute', alignItems: 'center', backgroundColor:'rgba(0,0,0,0)'}}>
+                <TouchableHighlight
+                    onPress={this.toggleView}
+                    underlayColor="#2882D8"
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: SIZE,
+                        height: SIZE,
+                        borderRadius: SIZE / 2,
+                        backgroundColor: Colors.primary,
+                        borderColor:'#FFFFFF',
+                        borderWidth:1
+                    }}
+                >
+                    <Animated.View style={{
+                        transform: [
+                            {rotate: rotation}
+                        ]
+                    }}>
+                        <Icon name="plus" size={24} color="#F8F8F8"/>
+                    </Animated.View>
+                </TouchableHighlight>            
+                <Animated.View style={{ position: 'absolute', left: fifthX, top: fifthY, opacity }}>
                     <TouchableHighlight
-                        onPress={() => { this._openModal('aboutTAZ')
-                        }}
+                        onPress={() => { this._openModal('aboutTAZ')}}
                         style={[shadow,{
                             alignItems: 'center',
                             justifyContent: 'center',
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
-                            backgroundColor: '#48A2F8'
+                            backgroundColor: '#48A2F8',
+                            zIndex:2000
                         }]}
                     >
                     <Image source={require('../images/hibiscus.png')} style={{height:SIZE/2, width:SIZE/2, tintColor:'#F8F8F8'}}/>
                     </TouchableHighlight>
                 </Animated.View> 
                 
-                <Animated.View style={{
-                    position: 'absolute',
-                    left: sixthX,
-                    top: sixthY,
-                    opacity
-                }}>
+                <Animated.View style={{ position: 'absolute', left: sixthX, top: sixthY, opacity }}>
                     <TouchableHighlight
                         onPress={() => { WebBrowser.openBrowserAsync('https://www.scoraregistration.com/paddler_login');; this.toggleView()
                         }}
@@ -157,19 +166,15 @@ class AddButton extends Component {
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
-                            backgroundColor: '#48A2F8'
+                            backgroundColor: '#48A2F8',
+                            zIndex:2000
                         }]}
                     >
                         <Icon name="user" size={30} color="#F8F8F8"/>
                     </TouchableHighlight>
                 </Animated.View> 
                 
-                <Animated.View style={{
-                    position: 'absolute',
-                    left: seventhX,
-                    top: seventhY,
-                    opacity
-                }}>
+                <Animated.View style={{ position: 'absolute', left: seventhX, top: seventhY, opacity }}>
                     <TouchableHighlight
                         onPress={() => { WebBrowser.openBrowserAsync('https://waiver.smartwaiver.com/w/5bfc43ae42c8a/web/');; this.toggleView()
                         }}
@@ -192,7 +197,7 @@ class AddButton extends Component {
                     top: firstY,
                     opacity
                 }}>
-                    <TouchableHighlight
+                <TouchableHighlight
                         onPress={() => { WebBrowser.openBrowserAsync('http://tazocc.com/store/'); this.toggleView()
                         }}
                         style={[shadow,{
@@ -201,7 +206,8 @@ class AddButton extends Component {
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
-                            backgroundColor: '#48A2F8'
+                            backgroundColor: '#48A2F8',
+                            zIndex:2000
                         }]}
                     >
                     <Image source={require('../images/shopping-cart.png')} style={{height:SIZE/3, width:SIZE/3, tintColor:'#F8F8F8'}}/>
@@ -223,7 +229,8 @@ class AddButton extends Component {
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
-                            backgroundColor: '#48A2F8'
+                            backgroundColor: '#48A2F8',
+                            zIndex:2000
                         }]}
                     >
                     <Image source={require('../images/events.png')} style={{height:SIZE/3, width:SIZE/3, tintColor:'#F8F8F8'}}/>
@@ -234,10 +241,9 @@ class AddButton extends Component {
                     left: thirdX,
                     top: thirdY,
                     opacity
-                }}>
+                }} onPress={()=> alert('holla')}>
                     <TouchableHighlight
-                        onPress={() => { this._openModal('sponsors')
-                        }}
+                        onPress={() => { this._openModal('sponsors')}}
                         style={[shadow,{
                             position: 'absolute',
                             alignItems: 'center',
@@ -245,35 +251,13 @@ class AddButton extends Component {
                             width: SIZE / 2,
                             height: SIZE / 2,
                             borderRadius: SIZE / 4,
-                            backgroundColor: '#48A2F8'                        
+                            backgroundColor: '#48A2F8',
+                            zIndex:2000                        
                         }]}
                     >
                     <Image source={require('../images/sponsors.png')} style={{height:SIZE/3, width:SIZE/3, tintColor:'#F8F8F8'}}/>
                     </TouchableHighlight>
                 </Animated.View>
-
-                <TouchableHighlight
-                    onPress={this.toggleView}
-                    underlayColor="#2882D8"
-                    style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: SIZE,
-                        height: SIZE,
-                        borderRadius: SIZE / 2,
-                        backgroundColor: Colors.primary,
-                        borderColor:'#FFFFFF',
-                        borderWidth:1
-                    }}
-                >
-                    <Animated.View style={{
-                        transform: [
-                            {rotate: rotation}
-                        ]
-                    }}>
-                        <Icon name="plus" size={24} color="#F8F8F8"/>
-                    </Animated.View>
-                </TouchableHighlight>
                 <Modal
                     animationType="slide"
                     transparent={true}

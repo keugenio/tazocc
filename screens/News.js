@@ -17,6 +17,10 @@ class News extends React.Component {
       this.props.UpdateLocalDataSource(JSON.parse(results))
       }
     );
+    AsyncStorage.getItem('unReadNews').then( (results)=> {
+      this.props.SetNewPostIDs(JSON.parse(results))
+      }
+    );
   }
   static navigationOptions = {
     title: 'TAZ News and Messages',
@@ -30,12 +34,21 @@ class News extends React.Component {
   };
 
   _handleOnPress(id){
-    const {newPostsCount, newPostIDs} = this.props.newPosts;
-    const index = newPostIDs.indexOf(id);
+
+    const index = newPosts.IDs.indexOf(id);
     
+    // update unread in redux to trigger badge on tab bar icon.  Redux will remove id from state as well as unread
+    // news items in storage.
+    // add id to read items in Async Storage. 
     if (index>=0){      
       this.props.UpdateNewPostIDs(newPostIDs, id);
-      this.props.UpdateNewPostCount(newPostsCount);
+      AsyncStorage.getItem("readNews").then((results)=>{
+        if (results){
+          unreadNewsArr = JSON.parse(results);
+          unreadNewsArr.push(id);
+          AsyncStorage.setItem("readNews", JSON.stringify(unreadNewsArr))
+        }
+      })
     }
   }
 
@@ -55,8 +68,7 @@ const mapStateToProps = (state) => {
     return {
       localDataSource :state.localDataSource.localDataSource,
       newPosts:{
-        newPostsCount: state.newPosts.postCount,
-        newPostIDs: state.newPosts.postIDs
+        IDs: state.newPosts.postIDs
       }
     }
 }

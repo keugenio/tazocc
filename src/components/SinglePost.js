@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { ScrollView, SafeAreaView, View, TouchableWithoutFeedback, TouchableHighlight, StyleSheet, LayoutAnimation, Dimensions, Modal, WebView} from 'react-native';
+import { ScrollView, SafeAreaView, View, TouchableWithoutFeedback, TouchableHighlight, StyleSheet, LayoutAnimation, Dimensions, Modal, WebView, AsyncStorage} from 'react-native';
 import { Button, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 import HtmlText from 'react-native-html-to-text';
 import { CardSection } from '../components/common/CardSection';
-import {SelectPostID} from '../actions';
+import * as actions from '../actions';
 import FontSize from '../../constants/FontSize';
 import Colors from '../../constants/Colors';
 import Icon from '@expo/vector-icons/FontAwesome';
@@ -28,7 +28,23 @@ class SinglePost extends Component {
     LayoutAnimation.spring();
   }
   _selectPostID(id){   
-    this.props.SelectPostID(id);
+    this.props.SelectPostID(id); //update redux with selected news item
+
+    // remove the news item from the unread array in redux. redux will update Async storage
+    this.props.UpdateNewPostIDs(this.props.unReadNews, id);
+
+    // add this post in read news items array in Async storage
+    AsyncStorage.getItem('readNews').then((result)=>{
+      let readNewsArr = [];
+      if (result)
+        readNewsArr = JSON.parse(result);
+      readNewsArr.push(id);
+      AsyncStorage.setItem('readNews', JSON.stringify(readNewsArr))
+    })
+    
+    
+    
+
     //this.props.onPress(id); <-used to send state change to the parent component
   }
   _cleanText = function (text) {
@@ -120,16 +136,17 @@ class SinglePost extends Component {
       )
     }
   }
-  // _isNewPost(){ 
-  //   if (this.props.aNewPost)
-  //     return (
-  //       <View style={{marginLeft: FontSize.FONTSIZE}}>
-  //         <Icon name="star" size={FontSize.FONTSIZE} color={'#FFFF00'}/>
-  //       </View>
-  //     )
-  //   else
-  //       return null
-  // }
+  _isNewPost(){ 
+    if (this.props.aNewPost)
+      return (
+        <View style={{marginLeft: FontSize.FONTSIZE}}>
+          <Icon name="star" size={FontSize.FONTSIZE} color={'#FFFF00'}/>
+        </View>
+      )
+    else
+        return null
+  }
+
   render(){    
     const { id, title, content} = this.props.post.item;
     return (
@@ -148,7 +165,8 @@ class SinglePost extends Component {
               <View style={{flex:1, alignItems:'flex-end', flexDirection:'row', justifyContent:'flex-end'}}>
                 <Text style={[this._titleBarTextStyle(), {textAlign:'right'}]}>
                   {moment(this.props.post.item.date).format("MMM D")}
-                </Text>                       
+                </Text> 
+                {this._isNewPost()}                      
               </View>              
             </View>
             </CardSection>          
@@ -194,11 +212,19 @@ class SinglePost extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  
+console.log("state", state);
+
   const expanded = state.selectedPostID === ownProps.post.item.id;
+  // for the first time the app install, set all news items as new.  
+  // after that, it depends if it's on the newPost.IDs array
+  let aNewPost =  true;
+  if (state.newPosts.IDs)
+    aNewPost = state.newPosts.IDs.includes(ownProps.post.item.id);
 
   return {
     expanded:expanded,
+    aNewPost:aNewPost,
+    unReadNews:state.newPosts.IDs,
   }
 };
 
@@ -216,4 +242,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(mapStateToProps, {SelectPostID})(SinglePost);
+export default connect(mapStateToProps, actions)(SinglePost);

@@ -3,11 +3,12 @@ import { AsyncStorage } from 'react-native';
 
 export const UpdateNewPostIDs = (localPostIDsArray, key) => {
   
+    //remove the news item from the unread news
     const index = localPostIDsArray.indexOf(key);
     if (index>=0) {      
       localPostIDsArray.splice(index,1)
     }
-    AsyncStorage.setItem('newPostIDs', JSON.stringify(localPostIDsArray));
+    AsyncStorage.setItem('unReadNews', JSON.stringify(localPostIDsArray));
 
     return {
       type: UPDATE_POST_IDS,

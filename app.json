@@ -24,6 +24,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "informational app for Team Arizona Outrigger Canoe Club",
+    "githubUrl": "https://github.com/keugenio/tazocc"
   }
 }

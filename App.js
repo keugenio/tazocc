@@ -47,6 +47,28 @@ export default class App extends React.Component {
     .then((response) => response.json())
     .then((results) => {
       AsyncStorage.setItem('localDataStorage', JSON.stringify(results));
+      AsyncStorage.getItem('unreadNews').then((unReadNewsString)=>{
+        const unReadNewsArr = JSON.parse(unReadNewsString) || [];
+        const readNewsArr = [];
+        AsyncStorage.getItem("readNews").then((results)=>{
+          if (results)
+            readNewsArr = JSON.parse(results)
+        })
+
+        // if there were read news or unread news in storage
+        if (unReadNewsArr.length>0 || readNewsArr.length>0 ){
+          results.forEach((newsItem)=>{
+            if (!unReadNewsArr.find(newsItem.id) && !readNewsArr.find(newsItem.id))
+              unReadNewsArr.push(newsItem.id)
+          })
+        } else { // since there are no new news items, push all the articles as new. (only happens when new install)
+          results.forEach((newsItem)=>{
+            unReadNewsArr.push(newsItem.id);            
+          })
+        }
+        // store the same or updated array of unread news items
+        AsyncStorage.setItem('unReadNews', JSON.stringify(unReadNewsArr));        
+      })
     });
   }
 
@@ -114,9 +136,6 @@ export default class App extends React.Component {
         // This is the font that we are using for our tab bar
         ...Icon.Ionicons.font,
         
-
-        // We include SpaceMono because we use it in HomeScreen.js. Feel free
-        // to remove this if you are not using it in your app
         'space-mono': require('./assets/fonts/SpaceMono.ttf'),
         'Raleway': require('./assets/fonts/Raleway.ttf'),
         'Quicksand': require('./assets/fonts/Quicksand.ttf'),
