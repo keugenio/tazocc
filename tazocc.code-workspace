@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "/Users/kui/Desktop/testReact/NASH-App/NASH-App"
 		}
 	],
 	"settings": {

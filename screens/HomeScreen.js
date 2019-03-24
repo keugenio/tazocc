@@ -40,27 +40,6 @@ class HomeScreen extends React.Component {
     },
   };
 
-  _clearOnePost() {
-    AsyncStorage.getItem('localDataStorage').then((results) =>{
-
-      if (results){ // pop an item from localDataStorage and pop an id from localIDs 
-        const localDS = JSON.parse(results);
-        const localIDsArr = [];
-
-        localDS.pop();
-        AsyncStorage.setItem('localDataStorage', JSON.stringify(localDS));
-
-        localDS.forEach((post)=>{
-          localIDsArr.push(post.id);
-        })
-        AsyncStorage.setItem('localIDs', JSON.stringify(localIDsArr));
-        AsyncStorage.setItem('newPostIDs', JSON.stringify(localIDsArr));
-        AsyncStorage.setItem('newPostCount', localIDsArr.length.toString());
-      }
-      else
-        console.log('storage empty');
-    })
-  }
   _clearEverything(){
     AsyncStorage.clear();
   }
@@ -69,14 +48,14 @@ class HomeScreen extends React.Component {
     
      await AsyncStorage.getItem('unReadNews').then((results) =>{
         if (results){
-          console.log("unReadIDs", JSON.parse(results));
+          console.log("unReadNews", JSON.parse(results));
         }
         else
           console.log('unReadIDs empty');
       }); 
       await AsyncStorage.getItem('readNews').then((results) =>{
         if (results){
-          console.log("readIDs", JSON.parse(results));
+          console.log("readNews", JSON.parse(results));
         }
         else
           console.log('readIDs empty');
@@ -94,10 +73,7 @@ class HomeScreen extends React.Component {
   // for future releases for admin tools.
   _showAdminTools(){
     return (
-      <View>
-        <TouchableOpacity onPress={this._clearOnePost}>
-        <Text style={{color:'#FFFFFF', fontSize:25}}>clear post</Text>
-        </TouchableOpacity>   
+      <View>  
         <TouchableOpacity onPress={this._showStorage}>
           <Text style={{color:'#FFFFFF', fontSize:25}}>show storage in console log</Text>
         </TouchableOpacity>
@@ -113,40 +89,36 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.headerContainer}>  
-        <Image source={require('../src/images/header.png')} style={styles.headerImageStyle}/>
-        </View>
-        <View style={styles.mainBodyContainer}>
-        
-        {this._showAdminTools()}
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <View style={styles.headerContainer}>  
+          <Image source={require('../src/images/header.png')} style={styles.headerImageStyle}/>
+          </View>
+          <View style={styles.mainBodyContainer}>
+            <Image source={require('../src/images/homescreen1.jpg')} style={styles.imageStyle}/> 
+            <Loader loading={this.state.loading} />
+            <Video
+              source={{ uri: 'http://tazocc.com/wp-content/uploads/2019/03/TAZ_APP_Video.mov' }}
+              rate={1.0}
+              volume={0.0}
+              isMuted={false}
+              resizeMode="contain"
+              shouldPlay
+              isLooping
+              style={{ width: width, height: 300 }}
+              onReadyForDisplay={()=>{
+                this._loaderOff()
+              }}
+            />
 
-        <Image source={require('../src/images/homescreen1.jpg')} style={styles.imageStyle}/> 
-        <Loader loading={this.state.loading} />
-        <Video
-          source={{ uri: 'http://tazocc.com/wp-content/uploads/2019/03/TAZ_APP_Video.mov' }}
-          rate={1.0}
-          volume={0.0}
-          isMuted={false}
-          resizeMode="contain"
-          shouldPlay
-          isLooping
-          style={{ width: width, height: 300 }}
-          onReadyForDisplay={()=>{
-            this._loaderOff()
-          }}
-        />
-
-        <View style={{marginVertical:FontSize.FONTSIZE*2}}>
-          <Text style={[styles.pHighlight,{color:'#FFFF00', fontSize:FontSize.FONTSIZE*3, fontFamily:'Broda', textAlign:'center'}]}>our Mission</Text>
-          <Text style={styles.mainBodyText}>to promote the Hawaiian culture through competitive and recreational outrigger canoe paddling for youth (keikis), family (ohana), and the community.</Text>            
-        </View>
-        <Image source={require('../src/images/adr2018.jpg')} style={styles.imageStyle}/>
-        <Philosophies />  
-        <Image source={require('../src/images/christmas-2018.jpg')} style={styles.imageStyle}/> 
-        </View>
+            <View style={{marginVertical:FontSize.FONTSIZE*2}}>
+              <Text style={[styles.pHighlight,{color:'#FFFF00', fontSize:FontSize.FONTSIZE*3, fontFamily:'Broda', textAlign:'center'}]}>our Mission</Text>
+              <Text style={styles.mainBodyText}>to promote the Hawaiian culture through competitive and recreational outrigger canoe paddling for youth (keikis), family (ohana), and the community.</Text>            
+            </View>
+            <Image source={require('../src/images/adr2018.jpg')} style={styles.imageStyle}/>
+            <Philosophies />  
+            <Image source={require('../src/images/christmas-2018.jpg')} style={styles.imageStyle}/> 
+          </View>
         </ScrollView>  
-        
       </View>
     );
   }

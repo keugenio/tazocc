@@ -2,7 +2,7 @@ import {UPDATE_POST_COUNT, UPDATE_POST_IDS, SET_NEW_POST_COUNT, SET_NEW_POST_IDS
 import { AsyncStorage } from 'react-native';
 
 export const UpdateNewPostIDs = (localPostIDsArray, key) => {
-  
+    
     //remove the news item from the unread news
     const index = localPostIDsArray.indexOf(key);
     if (index>=0) {      

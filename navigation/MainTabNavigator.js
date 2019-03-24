@@ -10,6 +10,7 @@ import Events from '../screens/Events';
 import AboutTAZ from '../screens/AboutTAZ';
 import News from '../screens/News';
 import Sponsors from '../screens/Sponsors';
+import Paddle101 from '../screens/Paddle101';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -71,12 +72,12 @@ const CustomDrawerComponent =(props) =>(
         <View style={{flex:4, height:height*.75, backgroundColor:'rgba(255,255,255,.5)'}} >
           <DrawerItems {...props}/>
           <View style={{flexDirection:'column'}}>
-            <View>
+            <View  style={{marginTop:10}}>
               <TouchableOpacity onPress={() => { WebBrowser.openBrowserAsync('https://www.scoraregistration.com/paddler_login')}}>
                 <Text style={styles.drawerItemStyle}>SCORA Login</Text>
               </TouchableOpacity>
             </View>
-            <View style={{marginTop:20}}>
+            <View style={{marginTop:30}}>
               <TouchableOpacity onPress={() => { WebBrowser.openBrowserAsync('https://waiver.smartwaiver.com/w/5bfc43ae42c8a/web')}}>
                 <Text style={styles.drawerItemStyle}>Smart Waiver</Text>
               </TouchableOpacity>
@@ -106,12 +107,14 @@ const DrawerNavigator = createDrawerNavigator({
     Practices:Practices,
     AboutTAZ:AboutTAZ,
     Sponsors:Sponsors,
+    'Paddling 101':Paddle101, 
   },{
     drawerPosition:'right',
     contentComponent: CustomDrawerComponent,
     drawerWidth: FontSize.FONTSIZE*10,
-  
-  });
+    
+  },
+  );
 
 const MoreNavigator = createStackNavigator({    
     DrawerNavigator:{
@@ -135,7 +138,6 @@ export default createBottomTabNavigator(
     EmailStack,
     NewsStack,
     MoreNavigator,
-
   }, {
       tabBarOptions: {
           activeTintColor: Colors.warning,  // Color of tab when pressed

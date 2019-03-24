@@ -9,12 +9,9 @@ import Colors from '../constants/Colors';
 
 class TabBarIcon extends React.Component {
   _getBadge = function () {
-    const unReadItemsLength = this.props.newPosts.IDs ? this.props.newPosts.IDs.length : 10;
-
-    console.log(("unreadItems", unReadItemsLength));
-    
-    if ( ((this.props.name == 'ios-notifications' || this.props.name == 'md-notifications')) && unReadItemsLength > 0 )
+    if (this.props.name == 'ios-notifications' || this.props.name == 'md-notifications')
     {      
+      const unReadItemsLength = this.props.newPosts.IDs ? this.props.newPosts.IDs.length : 10;    
       return (
         <Badge 
           value={unReadItemsLength}  

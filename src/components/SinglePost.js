@@ -41,9 +41,6 @@ class SinglePost extends Component {
       readNewsArr.push(id);
       AsyncStorage.setItem('readNews', JSON.stringify(readNewsArr))
     })
-    
-    
-    
 
     //this.props.onPress(id); <-used to send state change to the parent component
   }
@@ -212,7 +209,6 @@ class SinglePost extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-console.log("state", state);
 
   const expanded = state.selectedPostID === ownProps.post.item.id;
   // for the first time the app install, set all news items as new.  

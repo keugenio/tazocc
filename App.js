@@ -46,29 +46,32 @@ export default class App extends React.Component {
     await fetch('http://www.tazocc.com//wp-json/wp/v2/posts')
     .then((response) => response.json())
     .then((results) => {
-      AsyncStorage.setItem('localDataStorage', JSON.stringify(results));
-      AsyncStorage.getItem('unreadNews').then((unReadNewsString)=>{
-        const unReadNewsArr = JSON.parse(unReadNewsString) || [];
-        const readNewsArr = [];
-        AsyncStorage.getItem("readNews").then((results)=>{
-          if (results)
-            readNewsArr = JSON.parse(results)
-        })
+      AsyncStorage.setItem('localDataStorage', JSON.stringify(results), () =>{
+        AsyncStorage.getItem('unreadNews', (err, unReadNewsStr) =>{
+          AsyncStorage.getItem('readNews', (err, readNewsStr) =>{
+          
+          const unReadNewsArr= unReadNewsStr ? JSON.parse(unReadNewsStr): [];
+          const readNewsArr= readNewsStr ? JSON.parse(readNewsStr): [];
+          const newNewsArr = [];
 
-        // if there were read news or unread news in storage
-        if (unReadNewsArr.length>0 || readNewsArr.length>0 ){
-          results.forEach((newsItem)=>{
-            if (!unReadNewsArr.find(newsItem.id) && !readNewsArr.find(newsItem.id))
-              unReadNewsArr.push(newsItem.id)
+          if (!unReadNewsStr && !readNewsStr ){
+            // since there are no new news items, push all the articles as new. (only happens when new install)
+            results.forEach((newsItem)=>{
+              newNewsArr.push(newsItem.id);                                  
+            })
+          } else {
+            // for every news items that wasn't read, push into unReadNewsArray
+            results.forEach((newsItem)=>{
+              if (!readNewsArr.includes(newsItem.id))
+                newNewsArr.push(newsItem.id);
+            }) 
+          }      
+          // store the same or updated array of unread news items
+          AsyncStorage.setItem('unReadNews', JSON.stringify(newNewsArr));                 
+          
           })
-        } else { // since there are no new news items, push all the articles as new. (only happens when new install)
-          results.forEach((newsItem)=>{
-            unReadNewsArr.push(newsItem.id);            
-          })
-        }
-        // store the same or updated array of unread news items
-        AsyncStorage.setItem('unReadNews', JSON.stringify(unReadNewsArr));        
-      })
+        })
+       })
     });
   }
 
