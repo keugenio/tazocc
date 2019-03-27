@@ -48,7 +48,7 @@ class Waa extends Component{
           }}
           title={item.title}
           >
-          <Text style={styles.p}>{item.text}</Text>      
+          <Text style={item.text.length>100 ? styles.p2: styles.p}>{item.text}</Text>      
         </Card>
   );
   }
@@ -79,7 +79,7 @@ class Waa extends Component{
     const {p, pHighlight} =  styles;
     
     return (
-      <View>
+      <View style={{paddingBottom:30}}>
         <Text style={[p, pHighlight, {fontSize:FontSize.FONTSIZE*2.5, textAlign:'center'}]}>Hawaiian Canoes Terms</Text>
         {this.pagination}
       
@@ -90,7 +90,10 @@ class Waa extends Component{
         renderItem={this._renderItem}
         sliderWidth={width*.85}
         itemWidth={width*.80} 
-        onSnapToItem={(index) => this.setState({ activeSlide: index }) }/>  
+        onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+        loop
+        autoplay
+        />  
 
       </View>
     )
@@ -102,6 +105,12 @@ export default Waa
 const styles = StyleSheet.create({
   p:{
     fontSize: FontSize.FONTSIZE,
+    color: '#FFFFFF',  
+    fontFamily:'Raleway', 
+    textAlign:'center' 
+  },
+  p2:{
+    fontSize: FontSize.FONTSIZE-5,
     color: '#FFFFFF',  
     fontFamily:'Raleway', 
     textAlign:'center' 

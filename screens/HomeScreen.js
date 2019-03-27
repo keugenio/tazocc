@@ -110,7 +110,7 @@ class HomeScreen extends React.Component {
               }}
             />
 
-            <View style={{marginVertical:FontSize.FONTSIZE*2}}>
+            <View style={{marginVertical:FontSize.FONTSIZE*2, paddingLeft:30, paddingRight:30}}>
               <Text style={[styles.pHighlight,{color:'#FFFF00', fontSize:FontSize.FONTSIZE*3, fontFamily:'Broda', textAlign:'center'}]}>our Mission</Text>
               <Text style={styles.mainBodyText}>to promote the Hawaiian culture through competitive and recreational outrigger canoe paddling for youth (keikis), family (ohana), and the community.</Text>            
             </View>

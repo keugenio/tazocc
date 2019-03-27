@@ -15,11 +15,11 @@ class Olelo extends Component{
       activeSlide:0,
       data:[
         {title:'\‘E \‘E!', text:'pronounced ay ay (this is hard to describe.. actually a very short \“e\”). Get in the canoe!'},
-        {title:'HO\‘OMAKAUKAU!', text:'pronounced Ho oh MAH cow cow. Get ready or get set! This can be whatever you think \“get set\” means. Paddle across the gunwales, take a deep breath and focus.'},
+        {title:'HO\‘OMAKAUKAU!', text:'pronounced Ho oh MAH cow cow. Get ready or get set!'},
         {title:'E KAUPE!', text:'pronounced Eh kah oo peh. Poised to plant the blade in the water.'},
         {title:'HOE', text:'pronounced ho aee. Paddle! And off you go.'},
-        {title:'UNE', text:'pronounced OO-NAY. To \“lever\". This is the action MUA (stroker and sometimes others) takes to help HO\‘OKELE (steerer) turn the bow of the canoe going around the turn flag. This can be ANY movement of the paddle, from a J-stroke to paddling toward the hull. I have heard this term mis-pronounced UNI = OO-NEE. This word is not in the Hawaiian dictionary.'},
-        {title:'KAHI', text:'pronounced, KAH-HEE. To \“cut\".  Holds the paddle still, blade \“cutting\” in the same line as the canoe. No \“action\” taken. Or, kahi left, planting the blade out on the left side and pulling water under the canoe to help turn the front of the canoe to the left.'},
+        {title:'UNE', text:'pronounced OO-NAY. To \“lever\". This is the action to help HO\‘OKELE (steerer) turn the bow of the canoe.'},
+        {title:'KAHI', text:'pronounced, KAH-HEE. Planting the blade out on the left side and pulling water under the canoe to help turn the front of the canoe to the left.'},
       ]
     }
   }
@@ -70,7 +70,7 @@ class Olelo extends Component{
     const {p, pHighlight} =  styles;
     
     return (
-      <View style={{flex:1, marginLeft:-15}}>
+      <View style={{justifyContent:'flex-start',alignItems:'center', padding:0}}>
         <Text style={[p, pHighlight, {fontSize:FontSize.FONTSIZE*2.5, textAlign:'center'}]}>Outrigger Paddling Terms</Text>
 
         {this.pagination}
@@ -78,11 +78,12 @@ class Olelo extends Component{
             ref={(c) => { this._carousel = c; }}
             data={this.state.data}
             renderItem={this._renderItem}
-            sliderWidth={width}
-            itemWidth={width*.95} 
-            onSnapToItem={(index) => this.setState({ activeSlide: index }) 
-            
-          }/>  
+            sliderWidth={width*.85}
+            itemWidth={width*.85} 
+            onSnapToItem={(index) => this.setState({ activeSlide: index })}
+            loop
+            autoplay
+          />  
       </View>
     )
   } 

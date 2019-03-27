@@ -65,94 +65,48 @@ NewsStack.navigationOptions = {
   ), 
 };
 
-const CustomDrawerComponent =(props) =>(
-  <SafeAreaView> 
-    <ScrollView>
-      <View style={{flexDirection:'column', justifyContent:'space-around'}}>
-        <View style={{flex:4, height:height*.75, backgroundColor:'rgba(255,255,255,.5)'}} >
-          <DrawerItems {...props}/>
-          <View style={{flexDirection:'column'}}>
-            <View  style={{marginTop:10}}>
-              <TouchableOpacity onPress={() => { WebBrowser.openBrowserAsync('https://www.scoraregistration.com/paddler_login')}}>
-                <Text style={styles.drawerItemStyle}>SCORA Login</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{marginTop:30}}>
-              <TouchableOpacity onPress={() => { WebBrowser.openBrowserAsync('https://waiver.smartwaiver.com/w/5bfc43ae42c8a/web')}}>
-                <Text style={styles.drawerItemStyle}>Smart Waiver</Text>
-              </TouchableOpacity>
-            </View>          
-          </View>  
-        </View>
-        <View style={{flex:1, width:'100%', height:height*.25, alignItems:'flex-end', padding:10}}>
-          <View style={{width:'25%'}}>
-            <Button
-              icon={
-                <Icon
-                  name="arrow-right"
-                  size={15}
-                  color="white"
-                />
-              }
-              onPress={()=>{props.navigation.closeDrawer()}}
-            />      
-          </View>
-        </View>    
-      </View>
-    </ScrollView>                
-  </SafeAreaView>      
-);
-const DrawerNavigator = createDrawerNavigator({
-    Events:Events,
-    Practices:Practices,
-    AboutTAZ:AboutTAZ,
-    Sponsors:Sponsors,
-    'Paddling 101':Paddle101, 
-  },{
-    drawerPosition:'right',
-    contentComponent: CustomDrawerComponent,
-    drawerWidth: FontSize.FONTSIZE*10,
-    
-  },
-  );
-
-const MoreNavigator = createStackNavigator({    
-    DrawerNavigator:{
-        screen: DrawerNavigator
-    }
-  },{
-    navigationOptions: ({ navigation }) => ({
-        tabBarLabel: 'More',
-        tabBarIcon: ({ focused }) => (
-            <TouchableOpacity  onPress={() => {navigation.dispatch(DrawerActions.openDrawer())} }>
-              <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-menu' : 'md-menu'} />
-            </TouchableOpacity>       
-          )
-               
-    })
+const PracticesStack = createStackNavigator({
+  Settings: Practices,
 });
+NewsStack.navigationOptions = {
+  tabBarLabel: 'Practices',
+  tabBarIcon: ({ focused }) => (
+      <TabBarIcon
+        focused={focused}
+        name={Platform.OS === 'ios' ? 'ios-notifications' : 'md-notifications'}
+      />  
+  ), 
+};
+
+
 
 export default createBottomTabNavigator(
   {
     HomeStack,
     EmailStack,
     NewsStack,
-    MoreNavigator,
-  }, {
-      tabBarOptions: {
-          activeTintColor: Colors.warning,  // Color of tab when pressed
-          inactiveTintColor: Colors.info, // Color of tab when not pressed
-          showIcon: 'true', // Shows an icon for both iOS and Android
-          showLabel: (Platform.OS !== 'android'), //No label for Android
-          labelStyle: {
-            fontSize: FontSize.FONTSIZE-5,
-          },
-          style: {
-            backgroundColor: Colors.mainBg, // Makes Android tab bar white instead of standard blue
-            height: (Platform.OS === 'ios') ? 48 : 50 // I didn't use this in my app, so the numbers may be off. 
-          }
+    PracticesStack,
+    }, {
+        defaultNavigationOptions: {
+          gesturesEnabled: false,
         },
-  }
+        tabBarOptions: {
+            activeTintColor: Colors.warning,  // Color of tab when pressed
+            inactiveTintColor: Colors.info, // Color of tab when not pressed
+            showIcon: 'true', // Shows an icon for both iOS and Android
+            showLabel: (Platform.OS !== 'android'), //No label for Android
+            gesturesEnabled:false,
+            gestureResponseDistance:0,
+            header:false,
+            labelStyle: {
+              fontSize: FontSize.FONTSIZE-5,
+            },
+            style: {
+              backgroundColor: Colors.mainBg, // Makes Android tab bar white instead of standard blue
+              height: (Platform.OS === 'ios') ? 48 : 50 // I didn't use this in my app, so the numbers may be off. 
+            }
+          },
+    }
 );
 
 const styles=StyleSheet.create({

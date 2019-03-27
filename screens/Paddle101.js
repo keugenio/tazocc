@@ -54,9 +54,9 @@ class Paddle101 extends Component{
               the crew with the language. The same language used consistently also gives Ho‘okele (steerer)
               control of the canoe and used to the idea of giving commands.{'\n'}{'\n'}
             </Text>
-            <View>
+
               <Olelo />
-            </View>
+
             <Text style={p}>  
               All of the following terms are from either Hawaiian Dictionary by Pukui & Elbert or The
               Hawaiian Canoe by Tommy Holmes{'\n'}
