@@ -5,6 +5,16 @@ import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 
 class AboutTAZ extends Component{
+  static navigationOptions = {
+    title: 'About TAZ',
+    headerStyle: {
+      backgroundColor: Colors.mainBg,
+    },
+    headerTintColor: '#FFF',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  }
   
   render(){
     const {container, p, lineSpacer, textLeft} = styles;

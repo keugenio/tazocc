@@ -27,16 +27,7 @@ export default class Events extends Component{
         this.setState({allCalEvents: JSON.parse(result)})
       });      
     }   
-    static navigationOptions = {
-      title: 'TAZ Events',
-      headerStyle: {
-        backgroundColor: Colors.mainBg,
-      },
-      headerTintColor: '#FFF',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    }
+
     componentWillMount(){
       this.props.navigation.openDrawer();
     }
@@ -163,13 +154,13 @@ export default class Events extends Component{
             />        
           </View>
           <View style={{flex:1, backgroundColor:'rgba(255,255,255,.5)', marginBottom:15}}>
-              <View style={{flexDirection:'row', borderWidth:2, borderColor:Colors.mainBg, padding:5, backgroundColor:'rgb(255,255,255)'}}>
-                <View style={{flexDirection:'column', padding:5}}>
+              <View style={{ flex:1,flexDirection:'row', borderWidth:2, borderColor:Colors.mainBg, padding:5, backgroundColor:'rgb(255,255,255)'}}>
+                <View style={{flexDirection:'column', padding:5, alingItems:'center'}}>
                   <Text h5 style={{textAlign:'center', fontWeight:'400'}}>{moment(this.state.currentClickedEvent.startDate).format("dddd")}</Text>
                   <Text h5 style={{textAlign:'center', fontWeight:'800'}}>{moment(this.state.currentClickedEvent.startDate).format("MMMM Do")}</Text>
                   <Text h5 style={{textAlign:'center', fontWeight:'600'}}>{this.state.currentClickedEvent.startTime}</Text>
                 </View>
-                <View style={{flexDirection:'column', borderLeftWidth:1, borderLeftColor: Colors.mainBg, justifyContent:'center', padding:5, paddingLeft:10, width:width*.75}}>
+                <View style={{flexDirection:'row', borderLeftWidth:1, borderLeftColor: Colors.mainBg, alignItems:'flex-start', justifyContent:'center', padding:5, paddingLeft:10, width:width*.75}}>
                   <Text style={{flexWrap:'wrap', fontWeight:'200'}} h4>{this.state.currentClickedEvent.summary}</Text>
                 </View>
               </View>

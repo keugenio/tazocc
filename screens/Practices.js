@@ -4,19 +4,23 @@ import { Card, Button } from 'react-native-elements';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Icon from '@expo/vector-icons/FontAwesome';
+import TabBarIcon from '../components/TabBarIcon';
 
 const {height, width}=Dimensions.get('window');
 
 class Practices extends Component{
   static navigationOptions = {
     title: 'Practices',
-    headerStyle: {
-      backgroundColor: Colors.mainBg,
-    },
-    headerTintColor: '#FFF',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon
+        focused={focused}
+        name={
+          Platform.OS === 'ios'
+            ? `ios-speedometer`
+            : 'md-speedometer'
+        }
+      />
+    ),
   };  
   constructor() {
     super();

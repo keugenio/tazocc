@@ -20,17 +20,8 @@ class Paddle101 extends Component{
   setModalVisible(status){
     this.setState({modalVisible:status});
   }
-  static navigationOptions = {
-    title: 'Paddling 101',
-    headerStyle: {
-      backgroundColor: '#f4511e',
-      marginTop:500,
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  };
+
+
   render(){
     const {container, p, lineSpacer, bold} = styles;
     return(        

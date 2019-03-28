@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image,ScrollView,StyleSheet,Text,View,Dimensions, AsyncStorage, TouchableOpacity} from 'react-native';
+import {Image,ScrollView,StyleSheet,Text,View,Dimensions, AsyncStorage, TouchableOpacity, Platform} from 'react-native';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Philosophies from '../src/components/Philosophies';
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { Video } from 'expo';
 import * as actions from '../src/actions'
 import Loader from '../src/components/Loader';
+import TabBarIcon from '../components/TabBarIcon';
 
 const {width, height} = Dimensions.get('window');
 
@@ -30,14 +31,17 @@ class HomeScreen extends React.Component {
   }
 
   static navigationOptions = {
-    title: 'Team Arizona Outrigger Canoe Club',
-    headerStyle: {
-      backgroundColor: Colors.mainBg,
-    },
-    headerTintColor: '#FFF',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+    title: 'Home',
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon
+        focused={focused}
+        name={
+          Platform.OS === 'ios'
+            ? `ios-home`
+            : 'md-home'
+        }
+      />
+    ),
   };
 
   _clearEverything(){

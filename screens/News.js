@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, SafeAreaView, StyleSheet, AsyncStorage} from 'react-native';
+import {View, SafeAreaView, StyleSheet, AsyncStorage, Platform} from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../src/actions';
-
+import TabBarIcon from '../components/TabBarIcon';
 import LocalPosts from '../src/components/LocalPosts';
 
 import Colors from '../constants/Colors';
@@ -23,14 +23,17 @@ class News extends React.Component {
     );
   }
   static navigationOptions = {
-    title: 'TAZ News and Messages',
-    headerStyle: {
-      backgroundColor: Colors.mainBg,
-    },
-    headerTintColor: '#FFF',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+    title: 'TAZ News',
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon
+        focused={focused}
+        name={
+          Platform.OS === 'ios'
+            ? `ios-notifications`
+            : 'md-notifications'
+        }
+      />
+    ),
   };
 
   _handleOnPress(id){

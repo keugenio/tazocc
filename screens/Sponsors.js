@@ -5,14 +5,21 @@ import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 
 class Sponsors extends Component{
+  static navigationOptions = {
+    title: 'Our Sponsors',
+    headerStyle: {
+      backgroundColor: Colors.mainBg,
+    },
+    headerTintColor: '#FFF',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  }
   render(){
     const {container, p, lineSpacer, textLeft} = styles;
     return(        
       <View style={container}>
         <ScrollView>
-          <View style={[lineSpacer]}>
-            <Text style={[p, {textAlign:'center', fontSize:FontSize.FONTSIZE+5, fontWeight:'700'}]}>Visit our Sponsors</Text>
-          </View>
           <View style={[lineSpacer, {flex:1}]}>
             <Text style={p}>
             We have had many business acknowledge and support our organization. Their sponsorship helps Team Arizona accomplish our goals and preserve our traditions and philosophy We ask that you show your kokua (support) our sponsors and all they do for us.

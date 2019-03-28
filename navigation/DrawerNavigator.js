@@ -1,26 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { SafeAreaView, ScrollView , TouchableOpacity, View, Text, Dimensions, StyleSheet} from 'react-native';
-import { Button } from 'react-native-elements';
-import { createDrawerNavigator, DrawerItems, DrawerActions, MenuItem} from 'react-navigation';
+import { createDrawerNavigator, createStackNavigator, DrawerItems, DrawerActions, MenuItem} from 'react-navigation';
 
-import Practices from '../screens/Practices';
-import Events from '../screens/Events';
-import AboutTAZ from '../screens/AboutTAZ';
+import AboutTAZ from '../screens//AboutTAZ';
+import Calendar from '../screens/Events';
 import Sponsors from '../screens/Sponsors';
 import Paddle101 from '../screens/Paddle101';
-import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from '@expo/vector-icons/Ionicons';
 import {WebBrowser} from 'expo';
 import MainTabNavigator from './MainTabNavigator';
-
-const {width, height} = Dimensions.get('window');
+import Colors from '../constants/Colors';
+import fontSize from '../constants/FontSize';
 
 const CustomDrawerComponent =(props) =>(
   <SafeAreaView> 
     <ScrollView>
-      <View style={{flexDirection:'column', justifyContent:'space-around'}}>
-        <View style={{flex:4, height:height*.75, backgroundColor:'rgba(255,255,255,.5)'}} >
+        <View style={{backgroundColor:'rgba(255,255,255,.5)', marginTop:40}} >
           <DrawerItems {...props}/>
           <View style={{flexDirection:'column'}}>
             <View  style={{marginTop:10}}>
@@ -34,36 +30,122 @@ const CustomDrawerComponent =(props) =>(
               </TouchableOpacity>
             </View>          
           </View>  
-        </View>
-        <View style={{flex:1, width:'100%', height:height*.25, alignItems:'flex-end', padding:10}}>
-          <View style={{width:'25%'}}>
-            <Button
-              icon={
-                <Icon
-                  name="arrow-right"
-                  size={15}
-                  color="white"
-                />
-              }
-              onPress={()=>{props.navigation.closeDrawer()}}
-            />      
-          </View>
-        </View>    
-      </View>
+        </View>  
     </ScrollView>                
   </SafeAreaView>      
 );
+
+
+const CalendarStack = createStackNavigator({
+  News: {
+    screen: Calendar,
+    navigationOptions: ({navigation})=>{
+      return {
+        headerTitle:'TAZ Calendar',
+        headerLeft:(
+          <Icon 
+            name="md-menu" 
+            size={FontSize.FONTSIZE*2} 
+            onPress = { ()=> navigation.openDrawer()}
+            style={{paddingLeft:FontSize.FONTSIZE/2, color:'#FFFFFF'}} />
+        ),
+        headerStyle:{backgroundColor:Colors.mainBg},
+        headerTitleStyle:{color:'#FFFFFF', fontWeight:'bold',fontSize:FontSize.FONTSIZE+5}
+      }
+      
+    }
+  } 
+});
+
+const AboutTAZStack = createStackNavigator({
+  AboutTAZ: {
+    screen: AboutTAZ,
+    navigationOptions: ({navigation})=>{
+      return {
+        headerTitle:'About TAZ',
+        headerLeft:(
+          <Icon 
+            name="md-menu" 
+            size={FontSize.FONTSIZE*2} 
+            onPress = { ()=> navigation.openDrawer()}
+            style={{paddingLeft:FontSize.FONTSIZE/2, color:'#FFFFFF'}} />
+        ),
+        headerStyle:{backgroundColor:Colors.mainBg},
+        headerTitleStyle:{color:'#FFFFFF', fontWeight:'bold',fontSize:FontSize.FONTSIZE+5}
+      }
+      
+    }
+  } 
+});
+
+const Paddling101Stack = createStackNavigator({
+Paddling101: {
+    screen: Paddle101,
+    navigationOptions: ({navigation})=>{
+      return {
+        headerTitle:'Paddling 101',
+        headerLeft:(
+          <Icon 
+            name="md-menu" 
+            size={FontSize.FONTSIZE*2} 
+            onPress = { ()=> navigation.openDrawer()}
+            style={{paddingLeft:FontSize.FONTSIZE/2, color:'#FFFFFF'}} />
+        ),
+        headerStyle:{backgroundColor:Colors.mainBg},
+        headerTitleStyle:{color:'#FFFFFF', fontWeight:'bold',fontSize:FontSize.FONTSIZE+5}
+      }
+    }
+  } 
+});
+
+const SponsorsStack = createStackNavigator({
+  Sponsors: {
+      screen: Sponsors,
+      navigationOptions: ({navigation})=>{
+        return {
+          headerTitle:'Our Sponsors',
+          headerLeft:(
+            <Icon 
+            name="md-menu" 
+            size={FontSize.FONTSIZE*2} 
+            onPress = { ()=> navigation.openDrawer()}
+            style={{paddingLeft:FontSize.FONTSIZE/2, color:'#FFFFFF'}} />
+        ),
+        headerStyle:{backgroundColor:Colors.mainBg},
+        headerTitleStyle:{color:'#FFFFFF', fontWeight:'bold',fontSize:FontSize.FONTSIZE+5}
+      }
+    }
+  } 
+});
+
+const DashTabStackNavigator = createStackNavigator({
+  DashTabNav: MainTabNavigator
+  }, {
+  defaultNavigationOptions:({navigation}) => {
+    
+    return {
+      headerLeft:(
+        <Icon 
+          name="md-menu" 
+          size={fontSize.FONTSIZE*2} 
+          onPress = { ()=> navigation.openDrawer()}
+          style={{paddingLeft:FontSize.FONTSIZE/2, color:'#FFFFFF'}} />
+      )
+      
+    }
+  }
+})
+
 export default DrawerNavigator = createDrawerNavigator({
-      Home: MainTabNavigator,
-      Events:Events,
-      AboutTAZ:AboutTAZ,
-      Sponsors:Sponsors,
-      'Paddling 101':Paddle101, 
+    Home:{screen:DashTabStackNavigator},
+    'TAZ Calendar':CalendarStack,
+    'About TAZ':AboutTAZStack,
+    'Our Sponsors':SponsorsStack,
+    'Paddling 101':Paddling101Stack, 
     },{
       drawerPosition:'left',
       contentComponent: CustomDrawerComponent,
-      drawerWidth: FontSize.FONTSIZE*10,   
-      disableGestures:true, 
+      drawerWidth: FontSize.FONTSIZE*10
     },
   );
 
@@ -71,7 +153,6 @@ const styles=StyleSheet.create({
   drawerItemStyle:{
       fontWeight:'600',
       marginLeft:15,
-
   }
 
 })

@@ -20,7 +20,7 @@ export default {
   
   mainBg:'#002366',
   tabIconDefault: '#ccc',
-  tabIconSelected: tintColor,
+  tabIconSelected: warning,
   tabBar: '#fefefe',
   errorBackground: 'red',
   errorText: '#fff',

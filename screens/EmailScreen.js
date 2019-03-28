@@ -1,18 +1,25 @@
 import React from 'react';
-import {View,Text, StyleSheet} from 'react-native';
+import {View,Text, StyleSheet, Linking, Platform} from 'react-native';
 import Colors from '../constants/Colors';
 import {FONTSIZE} from '../constants'
+import TabBarIcon from '../components/TabBarIcon';
 
 export default class EmailScreen extends React.Component {
   static navigationOptions = {
-    title: 'Email TAZ',
-    headerStyle: {
-      backgroundColor: Colors.mainBg,
-    },
-    headerTintColor: '#FFF',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+    tabBarLabel:'Email Us',
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon
+        focused={focused}
+        name={
+          Platform.OS === 'ios'
+            ? `ios-mail`
+            : 'md-mail'
+        }
+      />
+    ),
+    tabBarOnPress:(()=>{
+      Linking.openURL('mailto:teamazoutrigger@gmail.com?subject=Inquiry from TAZ App');
+    })
   };
 
   render() {
